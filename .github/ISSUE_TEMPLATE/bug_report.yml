@@ -1,0 +1,48 @@
+name: Bug report
+description: Something in the simulator isn't working as expected.
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: A clear description of the bug.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open the site
+        2. Press W to accelerate
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: false
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser / OS
+      placeholder: e.g. Chrome 129 on Windows 11
+    validations:
+      required: false
+
+  - type: dropdown
+    id: input-method
+    attributes:
+      label: Input method
+      options:
+        - Keyboard
+        - Gamepad
+        - Both
+    validations:
+      required: false

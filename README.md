@@ -1,5 +1,7 @@
 # Mini Driving Simulator 3D
 
+[![HTML Validate](https://github.com/lianeheidemann/mini-driving-simulator-3d/actions/workflows/html-validate.yml/badge.svg)](https://github.com/lianeheidemann/mini-driving-simulator-3d/actions/workflows/html-validate.yml)
+[![Deploy to GitHub Pages](https://github.com/lianeheidemann/mini-driving-simulator-3d/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/lianeheidemann/mini-driving-simulator-3d/actions/workflows/deploy-pages.yml)
 [![Play now](https://img.shields.io/badge/Play%20now-GitHub%20Pages-2EA44F?style=for-the-badge&logo=githubpages&logoColor=white)](https://lianeheidemann.github.io/mini-driving-simulator-3d/)
 [![Blender](https://img.shields.io/badge/Blender-E87D0D?style=for-the-badge&logo=blender&logoColor=white)](https://www.blender.org/)
 [![A-Frame](https://img.shields.io/badge/A--Frame-EF2D5E?style=for-the-badge)](https://aframe.io/)
@@ -10,11 +12,9 @@
 
 A browser-based 3D driving simulator built with **[Blender](https://www.blender.org/)**, **[A-Frame](https://aframe.io/)**, and **[Three.js](https://threejs.org/)**, drivable with the keyboard or an Xbox-compatible gamepad.
 
-<!-- Drop an animated demo at media/demo.webp — this image will pick it up automatically. -->
+![Gameplay demo](media/interface/preview-v1.webp)
 
 **🎮 Try it live: https://lianeheidemann.github.io/mini-driving-simulator-3d/**
-
-![Gameplay demo](media/demo.webp)
 
 ## Overview
 
@@ -103,6 +103,10 @@ The core loop (load car, drive, collide, reset, follow camera) is done. Possible
 - [ ] Connect non-Xbox controllers through [InputMapper](https://apps.microsoft.com/detail/9mzxvnfhgdw7?hl=en-US&gl=PT) (XInput emulation).
 - [ ] Checkpoints and a lap timer.
 - [ ] Engine audio.
+
+## Contributing
+
+Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) for local setup, project structure, and the PR process.
 
 ## License
 
