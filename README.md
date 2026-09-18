@@ -1,14 +1,14 @@
 # Mini Driving Simulator 3D
 
-[![HTML Validate](https://github.com/lianeheidemann/mini-driving-simulator-3d/actions/workflows/html-validate.yml/badge.svg)](https://github.com/lianeheidemann/mini-driving-simulator-3d/actions/workflows/html-validate.yml)
-[![Deploy to GitHub Pages](https://github.com/lianeheidemann/mini-driving-simulator-3d/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/lianeheidemann/mini-driving-simulator-3d/actions/workflows/deploy-pages.yml)
-[![Play now](https://img.shields.io/badge/Play%20now-GitHub%20Pages-2EA44F?style=for-the-badge&logo=githubpages&logoColor=white)](https://lianeheidemann.github.io/mini-driving-simulator-3d/)
 [![Blender](https://img.shields.io/badge/Blender-E87D0D?style=for-the-badge&logo=blender&logoColor=white)](https://www.blender.org/)
 [![A-Frame](https://img.shields.io/badge/A--Frame-EF2D5E?style=for-the-badge)](https://aframe.io/)
 [![Three.js](https://img.shields.io/badge/Three.js-000000?style=for-the-badge&logo=threedotjs&logoColor=white)](https://threejs.org/)
 [![glTF](https://img.shields.io/badge/glTF-2.0-88CC00?style=for-the-badge)](https://www.khronos.org/gltf/)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![Gamepad API](https://img.shields.io/badge/Gamepad%20API-4A5568?style=for-the-badge)](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API)
+
+[![HTML Validate](https://github.com/lianeheidemann/mini-driving-simulator-3d/actions/workflows/html-validate.yml/badge.svg)](https://github.com/lianeheidemann/mini-driving-simulator-3d/actions/workflows/html-validate.yml)
+[![Deploy to GitHub Pages](https://github.com/lianeheidemann/mini-driving-simulator-3d/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/lianeheidemann/mini-driving-simulator-3d/actions/workflows/deploy-pages.yml)
 
 A browser-based 3D driving simulator built with **[Blender](https://www.blender.org/)**, **[A-Frame](https://aframe.io/)**, and **[Three.js](https://threejs.org/)**, drivable with the keyboard or an Xbox-compatible gamepad.
 
