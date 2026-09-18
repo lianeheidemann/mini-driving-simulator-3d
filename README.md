@@ -89,12 +89,6 @@ mini-driving-simulator-3d/
 └── README.md
 ```
 
-## Documentation
-
-The [doc/](doc/) folder has the step-by-step guides used while building this project:
-
-- [Complete integration guide](doc/step-by-step/)
-
 ## Roadmap
 
 The core loop (load car, drive, collide, reset, follow camera) is done. Possible next steps:
