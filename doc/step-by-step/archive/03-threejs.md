@@ -1,5 +1,7 @@
 # Three.js in the Project
 
+[← Back to documentation index](../README.md)
+
 ## Purpose
 
 Three.js is the lower-level JavaScript 3D library used underneath the scene.

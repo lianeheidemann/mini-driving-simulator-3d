@@ -1,5 +1,7 @@
 # Blender and GLB Export
 
+[← Back to documentation index](../README.md)
+
 ## Purpose
 
 Blender is responsible for creating and preparing the visual 3D assets used by the simulator.

@@ -1,8 +1,19 @@
 # Mini Driving Simulator 3D
 
-A browser-based 3D driving simulator built with **Blender**, **A-Frame**, and **Three.js**, drivable with the keyboard or an Xbox-compatible gamepad.
+[![Play now](https://img.shields.io/badge/Play%20now-GitHub%20Pages-2EA44F?style=for-the-badge&logo=githubpages&logoColor=white)](https://lianeheidemann.github.io/mini-driving-simulator-3d/)
+[![Blender](https://img.shields.io/badge/Blender-E87D0D?style=for-the-badge&logo=blender&logoColor=white)](https://www.blender.org/)
+[![A-Frame](https://img.shields.io/badge/A--Frame-EF2D5E?style=for-the-badge)](https://aframe.io/)
+[![Three.js](https://img.shields.io/badge/Three.js-000000?style=for-the-badge&logo=threedotjs&logoColor=white)](https://threejs.org/)
+[![glTF](https://img.shields.io/badge/glTF-2.0-88CC00?style=for-the-badge)](https://www.khronos.org/gltf/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![Gamepad API](https://img.shields.io/badge/Gamepad%20API-4A5568?style=for-the-badge)](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API)
+
+A browser-based 3D driving simulator built with **[Blender](https://www.blender.org/)**, **[A-Frame](https://aframe.io/)**, and **[Three.js](https://threejs.org/)**, drivable with the keyboard or an Xbox-compatible gamepad.
 
 <!-- Drop an animated demo at media/demo.webp — this image will pick it up automatically. -->
+
+**🎮 Try it live: https://lianeheidemann.github.io/mini-driving-simulator-3d/**
+
 ![Gameplay demo](media/demo.webp)
 
 ## Overview
@@ -23,11 +34,11 @@ Load a car model exported from Blender into a small parking-lot scene and drive 
 
 | Technology | Role in the project |
 | --- | --- |
-| Blender | Creates and prepares the car and any other 3D assets. |
-| glTF / GLB | Format used to export 3D models from Blender to the browser. |
-| A-Frame | HTML-like structure for the 3D scene, entities, and custom components. |
-| Three.js | Lower-level access to vectors, quaternions, and custom per-frame logic (used through A-Frame). |
-| Gamepad API | Reads an Xbox-compatible controller's sticks, triggers, and buttons. |
+| [Blender](https://www.blender.org/) | Creates and prepares the car and any other 3D assets. |
+| [glTF / GLB](https://www.khronos.org/gltf/) | Format used to export 3D models from Blender to the browser. |
+| [A-Frame](https://aframe.io/) | HTML-like structure for the 3D scene, entities, and custom components. |
+| [Three.js](https://threejs.org/) | Lower-level access to vectors, quaternions, and custom per-frame logic (used through A-Frame). |
+| [Gamepad API](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API) | Reads an Xbox-compatible controller's sticks, triggers, and buttons. |
 
 ## Controls
 
@@ -40,7 +51,7 @@ Load a car model exported from Blender into a small parking-lot scene and drive 
 | Reset vehicle | R | B |
 | Toggle camera | Y | Y |
 
-The gamepad is read through the standard `navigator.getGamepads()` mapping; connect a controller and press any button to activate it.
+The gamepad is read through the standard [`navigator.getGamepads()`](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/getGamepads) mapping; connect a controller and press any button to activate it.
 
 ## Getting started
 
@@ -60,10 +71,11 @@ http://localhost:8000
 
 ```text
 mini-driving-simulator-3d/
-├── doc/                          # Learning-oriented guides for the stack
-│   ├── README.md
-│   ├── 05-integration-guide.md
-│   └── archive/                  # Earlier, superseded guides (Blender, A-Frame, Three.js, gamepad)
+├── doc/
+│   └── step-by-step/              # Learning-oriented guides for the stack
+│       ├── README.md
+│       ├── 05-integration-guide.md
+│       └── archive/               # Earlier, superseded guides (Blender, A-Frame, Three.js, gamepad)
 ├── input/                        # Source 3D assets (.glb / .blend)
 ├── src/
 │   ├── components/                # A-Frame components
@@ -81,18 +93,16 @@ mini-driving-simulator-3d/
 
 The [doc/](doc/) folder has the step-by-step guides used while building this project:
 
-- [Documentation index](doc/README.md)
-- [Complete integration guide](doc/05-integration-guide.md)
-- [Archived guides](doc/archive/) — Blender/GLB export, A-Frame setup, Three.js, gamepad input
+- [Complete integration guide](doc/step-by-step/)
 
 ## Roadmap
 
 The core loop (load car, drive, collide, reset, follow camera) is done. Possible next steps:
 
-- Wheel rotation and front-wheel steering animation.
-- Checkpoints and a lap timer.
-- Engine audio.
-- Mobile touch controls.
+- [ ] Wheel rotation and front-wheel steering animation.
+- [ ] Connect non-Xbox controllers through [InputMapper](https://apps.microsoft.com/detail/9mzxvnfhgdw7?hl=en-US&gl=PT) (XInput emulation).
+- [ ] Checkpoints and a lap timer.
+- [ ] Engine audio.
 
 ## License
 

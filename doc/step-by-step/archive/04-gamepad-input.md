@@ -1,5 +1,7 @@
 # Gamepad and Xbox-Compatible Input
 
+[← Back to documentation index](../README.md)
+
 ## Purpose
 
 The browser can read compatible controllers through the **Gamepad API**.

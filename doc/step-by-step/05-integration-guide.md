@@ -1,5 +1,7 @@
 # Complete Integration Guide
 
+[← Back to documentation index](README.md)
+
 This guide describes a practical order for creating the first working version of the simulator.
 
 The target is intentionally modest:
@@ -281,17 +283,17 @@ The first version is complete when all of these work:
 
 After the minimum version works, consider:
 
-- wheel rotation;
-- front-wheel steering animation;
-- speedometer;
-- checkpoints;
-- lap timer;
-- simple collisions;
-- engine audio;
-- multiple camera modes;
-- better lighting;
-- larger Blender environment;
-- mobile touch controls.
+- [ ] wheel rotation;
+- [ ] front-wheel steering animation;
+- [x] speedometer;
+- [ ] checkpoints;
+- [ ] lap timer;
+- [x] simple collisions;
+- [ ] engine audio;
+- [x] multiple camera modes;
+- [x] better lighting;
+- [ ] larger Blender environment;
+- [ ] mobile touch controls.
 
 ## What not to build first
 
