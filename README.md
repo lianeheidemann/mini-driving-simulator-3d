@@ -104,10 +104,6 @@ The core loop (load car, drive, collide, reset, follow camera) is done. Possible
 - [ ] Checkpoints and a lap timer.
 - [ ] Engine audio.
 
-## Contributing
-
-Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) for local setup, project structure, and the PR process.
-
 ## License
 
 Distributed under the [MIT License](LICENSE).
