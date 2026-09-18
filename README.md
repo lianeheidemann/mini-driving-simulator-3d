@@ -1,129 +1,99 @@
 # Mini Driving Simulator 3D
 
-A small browser-based 3D driving simulator built to study the integration of **Blender**, **A-Frame**, **Three.js**, and gamepad input.
+A browser-based 3D driving simulator built with **Blender**, **A-Frame**, and **Three.js**, drivable with the keyboard or an Xbox-compatible gamepad.
 
-The project idea is simple: create a 3D car and environment in Blender, export them to the web, render the scene with A-Frame, use Three.js for lower-level 3D behavior, and drive the vehicle using an Xbox-compatible controller or an emulated controller.
+<!-- Drop an animated demo at media/demo.webp — this image will pick it up automatically. -->
+![Gameplay demo](media/demo.webp)
 
-## Project goals
+## Overview
 
-- Model a simple car and driving environment in Blender.
-- Export 3D assets as `.glb` / `.gltf`.
-- Build the web 3D scene with A-Frame.
-- Use Three.js when more direct access to the 3D scene is needed.
-- Read controller input through the browser Gamepad API.
-- Support Xbox-compatible input, including virtual/emulated controllers when necessary.
-- Start with simple movement before adding realistic vehicle physics.
+Load a car model exported from Blender into a small parking-lot scene and drive it around with arcade-style handling: acceleration, braking/reverse, steering, a handbrake, wall collisions with recoil, a live speedometer, and two camera modes.
 
-## Technology overview
+## Features
+
+- Keyboard and Gamepad API input, auto-detected at runtime.
+- Arcade vehicle physics: acceleration, braking, reverse, drag, and speed-sensitive steering.
+- Collision handling against the parking-lot boundary walls, with impact recoil and camera shake.
+- Two camera modes: chase camera and top-down overhead view, with smooth transitions.
+- HUD with connected-controller status, live speedometer (km/h), and camera mode indicator.
+- Procedurally laid out scenery: stone boundary walls, gated entrance, parking markings, and surrounding landscape.
+- Vehicle reset to the starting position/orientation at any time.
+
+## Tech stack
 
 | Technology | Role in the project |
 | --- | --- |
-| Blender | Creates and prepares the car, track, obstacles, and other 3D assets. |
-| glTF / GLB | Format used to export optimized 3D models from Blender to the browser. |
-| A-Frame | Provides the main HTML-like structure for the 3D scene. |
-| Three.js | Gives lower-level access to objects, vectors, rotations, cameras, and custom 3D behavior. |
-| Gamepad API | Reads buttons, triggers, and analog sticks from a controller in the browser. |
-| Xbox-compatible controller / emulator | Provides the driving input used by the simulator. |
+| Blender | Creates and prepares the car and any other 3D assets. |
+| glTF / GLB | Format used to export 3D models from Blender to the browser. |
+| A-Frame | HTML-like structure for the 3D scene, entities, and custom components. |
+| Three.js | Lower-level access to vectors, quaternions, and custom per-frame logic (used through A-Frame). |
+| Gamepad API | Reads an Xbox-compatible controller's sticks, triggers, and buttons. |
 
-## Proposed architecture
+## Controls
 
-```text
-Blender
-  |
-  | export .glb / .gltf
-  v
-3D Assets
-  |
-  v
-A-Frame scene
-  |
-  +--> Camera / lights / entities
-  |
-  +--> Three.js objects and custom logic
-                    ^
-                    |
-              Gamepad API
-                    ^
-                    |
-        Xbox controller / emulator
+| Action | Keyboard | Gamepad |
+| --- | --- | --- |
+| Steer | A/D or ←/→ | Left stick |
+| Accelerate | W or ↑ | Right trigger (RT) |
+| Brake / reverse | S or ↓ | Left trigger (LT) |
+| Handbrake | Space | A |
+| Reset vehicle | R | B |
+| Toggle camera | Y | Y |
+
+The gamepad is read through the standard `navigator.getGamepads()` mapping; connect a controller and press any button to activate it.
+
+## Getting started
+
+The project is a static site with no build step, but the browser's `file://` origin blocks glTF/texture loading, so serve it over HTTP:
+
+```bash
+python -m http.server 8000
 ```
 
-## Initial controls
+Then open:
 
-| Input | Action |
-| --- | --- |
-| Left analog stick | Steering |
-| RT | Accelerate |
-| LT | Brake / reverse |
-| A | Handbrake |
-| Y | Change camera |
-| B | Reset vehicle |
+```text
+http://localhost:8000
+```
 
-The final mapping can be changed during development.
-
-## Suggested project structure
+## Project structure
 
 ```text
 mini-driving-simulator-3d/
-├── assets/
-│   ├── models/
-│   └── textures/
-├── doc/
+├── doc/                          # Learning-oriented guides for the stack
 │   ├── README.md
-│   ├── 01-blender.md
-│   ├── 02-aframe.md
-│   ├── 03-threejs.md
-│   ├── 04-gamepad-input.md
-│   └── 05-integration-guide.md
+│   ├── 05-integration-guide.md
+│   └── archive/                  # Earlier, superseded guides (Blender, A-Frame, Three.js, gamepad)
+├── input/                        # Source 3D assets (.glb / .blend)
 ├── src/
-│   ├── components/
+│   ├── components/                # A-Frame components
+│   │   ├── vehicle-controller.js  # Driving physics, collisions, reset
+│   │   ├── follow-camera.js       # Chase and overhead camera modes
+│   │   └── scenery.js             # Walls, ground, landscape, sky
 │   └── controls/
-├── index.html
+│       └── gamepad-input.js       # Gamepad API -> logical driving input
+├── index.html                    # Scene entry point
+├── LICENSE
 └── README.md
 ```
 
-> The code folders above represent the intended structure. They can be created gradually as the implementation begins.
-
-## Recommended development order
-
-1. Create a very simple car model in Blender.
-2. Export the model as GLB.
-3. Display the car in an A-Frame scene.
-4. Add a ground plane, camera, and lighting.
-5. Make the vehicle move with keyboard input first.
-6. Read a connected controller with the Gamepad API.
-7. Map steering, acceleration, and braking.
-8. Add a follow camera.
-9. Add simple collisions or boundaries.
-10. Only then consider more realistic physics.
-
 ## Documentation
 
-The `doc/` folder contains individual guides:
+The [doc/](doc/) folder has the step-by-step guides used while building this project:
 
 - [Documentation index](doc/README.md)
-- [Blender and GLB export](doc/01-blender.md)
-- [A-Frame scene setup](doc/02-aframe.md)
-- [Three.js inside the project](doc/03-threejs.md)
-- [Gamepad and Xbox-compatible input](doc/04-gamepad-input.md)
 - [Complete integration guide](doc/05-integration-guide.md)
+- [Archived guides](doc/archive/) — Blender/GLB export, A-Frame setup, Three.js, gamepad input
 
-## Useful links
+## Roadmap
 
-- Blender: https://www.blender.org/
-- A-Frame: https://aframe.io/
-- Three.js: https://threejs.org/
-- MDN Gamepad API: https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API
-- Microsoft Store controller/emulation tool referenced during project planning: https://apps.microsoft.com/detail/9mzxvnfhgdw7?hl=en-US&gl=PT
+The core loop (load car, drive, collide, reset, follow camera) is done. Possible next steps:
 
-## First milestone
+- Wheel rotation and front-wheel steering animation.
+- Checkpoints and a lap timer.
+- Engine audio.
+- Mobile touch controls.
 
-The first milestone is intentionally small:
+## License
 
-> A car model exported from Blender appears in the browser and can move forward, backward, left, and right using an Xbox-compatible controller.
-
-No realistic engine, suspension, transmission, or tire simulation is required for the first version.
-
-## Status
-
-Early development / learning project.
+Distributed under the [MIT License](LICENSE).
