@@ -16,3 +16,6 @@ Thumbs.db
 
 # Dependencies (in case a build step is added later)
 node_modules/
+
+# Electron build output
+dist/
