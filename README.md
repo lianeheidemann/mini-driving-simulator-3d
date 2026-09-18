@@ -14,7 +14,7 @@ A browser-based 3D driving simulator built with **[Blender](https://www.blender.
 
 ![Gameplay demo](media/interface/interface-v2.webp)
 
-**🎮 Try it live: https://lianeheidemann.github.io/mini-driving-simulator-3d/**
+**👾 Try it live: https://lianeheidemann.github.io/mini-driving-simulator-3d/**
 
 ## Overview
 
