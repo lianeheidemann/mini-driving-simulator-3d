@@ -132,7 +132,7 @@ mini-driving-simulator-3d/
 └── README.md
 ```
 
-See the [Complete Integration Guide](doc/step-by-step/) for the same list kept alongside the step-by-step docs.
+See [doc/step-by-step/](doc/step-by-step/) for the full build guide, including how to [use an Android phone as an Xbox-compatible controller with DroidJoy](doc/step-by-step/archive/06-droidjoy-phone-controller.md).
 
 ## License
 
