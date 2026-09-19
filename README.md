@@ -81,7 +81,7 @@ For a more comfortable DroidJoy touch layout, use the wide shoulder controls as 
 
 #### Custom DroidJoy Lite layout
 
-<img src="media/DroidJoy-Lite-v2.jpg" alt="Custom DroidJoy Lite controller layout" width="40%">
+<img src="media/DroidJoy-Lite-v2.jpg" alt="Custom DroidJoy Lite controller layout" width="50%">
 
 | Visible control | DroidJoy setting | Game action |
 | --- | ---: | --- |
