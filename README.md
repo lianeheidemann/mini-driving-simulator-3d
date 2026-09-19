@@ -134,17 +134,6 @@ mini-driving-simulator-3d/
 └── README.md
 ```
 
-## Roadmap
-
-The core loop (load car, drive, collide, reset, follow camera) is done, along with a gated parking-lot environment, boundary-wall collisions with recoil, and two camera modes. Possible next steps:
-
-- [ ] Wheel rotation and front-wheel steering animation.
-- [ ] Checkpoints and a lap timer.
-- [ ] Engine audio.
-- [ ] Larger Blender environment beyond the parking lot.
-- [ ] Native mobile touch controls (on-screen steering/pedals).
-- [ ] Connect non-Xbox controllers through [InputMapper](https://apps.microsoft.com/detail/9mzxvnfhgdw7?hl=en-US&gl=PT) (XInput emulation) — not implemented yet.
-
 See the [Complete Integration Guide](doc/step-by-step/05-integration-guide.md#good-second-version-features) for the same list kept alongside the step-by-step docs.
 
 ## License
