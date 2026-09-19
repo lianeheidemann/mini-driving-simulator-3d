@@ -327,7 +327,6 @@ After the minimum version works, consider (kept in sync with the [README Roadmap
 - [x] better lighting;
 - [ ] larger Blender environment;
 - [ ] mobile touch controls;
-- [ ] non-Xbox controller support via [InputMapper](https://apps.microsoft.com/detail/9mzxvnfhgdw7?hl=en-US&gl=PT) (XInput emulation) — not implemented yet, only tracked as a roadmap idea.
 
 ## What not to build first
 
