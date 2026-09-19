@@ -117,8 +117,6 @@ mini-driving-simulator-3d/
 ├── doc/
 │   └── step-by-step/              # Learning-oriented guides for the stack
 │       ├── README.md
-│       ├── 05-integration-guide.md
-│       ├── 06-droidjoy-phone-controller.md
 │       └── archive/               # Earlier, superseded guides (Blender, A-Frame, Three.js, gamepad)
 ├── input/                        # Source 3D assets (.glb / .blend)
 ├── media/                        # Screenshots and controller-layout images used in the docs
