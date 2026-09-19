@@ -118,13 +118,15 @@ mini-driving-simulator-3d/
 │   └── step-by-step/              # Learning-oriented guides for the stack
 │       ├── README.md
 │       ├── 05-integration-guide.md
+│       ├── 06-droidjoy-phone-controller.md
 │       └── archive/               # Earlier, superseded guides (Blender, A-Frame, Three.js, gamepad)
 ├── input/                        # Source 3D assets (.glb / .blend)
+├── media/                        # Screenshots and controller-layout images used in the docs
 ├── src/
 │   ├── components/                # A-Frame components
-│   │   ├── vehicle-controller.js  # Driving physics, collisions, reset
+│   │   ├── vehicle-controller.js  # Driving physics, keyboard input, collisions/recoil, reset, boundary walls
 │   │   ├── follow-camera.js       # Chase and overhead camera modes
-│   │   └── scenery.js             # Walls, ground, landscape, sky
+│   │   └── scenery.js             # Stone walls, parking surface, exterior landscape, sky textures
 │   └── controls/
 │       └── gamepad-input.js       # Gamepad API -> logical driving input
 ├── index.html                    # Scene entry point
@@ -134,12 +136,16 @@ mini-driving-simulator-3d/
 
 ## Roadmap
 
-The core loop (load car, drive, collide, reset, follow camera) is done. Possible next steps:
+The core loop (load car, drive, collide, reset, follow camera) is done, along with a gated parking-lot environment, boundary-wall collisions with recoil, and two camera modes. Possible next steps:
 
 - [ ] Wheel rotation and front-wheel steering animation.
-- [ ] Connect non-Xbox controllers through [InputMapper](https://apps.microsoft.com/detail/9mzxvnfhgdw7?hl=en-US&gl=PT) (XInput emulation).
 - [ ] Checkpoints and a lap timer.
 - [ ] Engine audio.
+- [ ] Larger Blender environment beyond the parking lot.
+- [ ] Native mobile touch controls (on-screen steering/pedals).
+- [ ] Connect non-Xbox controllers through [InputMapper](https://apps.microsoft.com/detail/9mzxvnfhgdw7?hl=en-US&gl=PT) (XInput emulation) — not implemented yet.
+
+See the [Complete Integration Guide](doc/step-by-step/05-integration-guide.md#good-second-version-features) for the same list kept alongside the step-by-step docs.
 
 ## License
 
