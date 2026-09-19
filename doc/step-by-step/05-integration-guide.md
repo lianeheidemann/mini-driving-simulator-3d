@@ -8,6 +8,8 @@ The target is intentionally modest:
 
 > Load a Blender car in the browser and drive it forward, backward, left, and right with a gamepad.
 
+> **Status:** every phase and checklist item below is implemented in the current codebase. The guide is kept as a learning path for anyone rebuilding the project from scratch; code snippets and paths were updated to match what actually ships today. Anything still missing lives in [Good second-version features](#good-second-version-features) and in the main [README Roadmap](../../README.md#roadmap).
+
 ## Phase 1 — Create the web scene
 
 Create:
@@ -39,6 +41,8 @@ Export:
 assets/models/car.glb
 ```
 
+> In this project the exported model lives at `input/car-v1.glb` (with later iterations `input/car-v2.blend` / `input/car-v2-2.glb` kept alongside it), not under `assets/`.
+
 ## Phase 3 — Load the car
 
 Add the asset:
@@ -63,6 +67,8 @@ Add the entity:
 ```
 
 Do not continue until scale and orientation are correct.
+
+> The actual entity in `index.html` also sets `shadow`, `rotation="0 90 0"` (the model faces local +Z), `scale="5 5 5"`, and the `vehicle-controller` component described in Phase 4.
 
 ## Phase 4 — Build a vehicle component
 
@@ -103,12 +109,14 @@ This separates vehicle bugs from gamepad bugs.
 
 If keyboard movement works, the vehicle logic is probably correct.
 
+> In this project keyboard handling was kept inline in `vehicle-controller.js` (its `onKeyDown`/`onKeyUp` listeners and the `keys` set) rather than split into a separate `src/controls/keyboard.js` module — the separation described in Phase 6 turned out to matter for the gamepad, not the keyboard.
+
 ## Phase 6 — Create a gamepad input module
 
 Create:
 
 ```text
-src/controls/gamepad.js
+src/controls/gamepad-input.js
 ```
 
 Its job should be to return logical values such as:
@@ -126,6 +134,8 @@ Its job should be to return logical values such as:
 The vehicle controller should not need to know which physical button index produced those values.
 
 This is an important separation of responsibilities.
+
+> `DrivingGamepadInput.read()` returns `{ throttle, steering, handbrake, reset, camera }`, where `throttle` already combines the accelerate/brake triggers into one signed value and `camera` toggles the view (see [gamepad-input.js](../../src/controls/gamepad-input.js)). It also auto-selects between the browser's `standard` mapping (Xbox-compatible controllers) and a numbered fallback used by DroidJoy — see [06-droidjoy-phone-controller.md](06-droidjoy-phone-controller.md).
 
 ## Phase 7 — Connect input to movement
 
@@ -264,24 +274,47 @@ mini-driving-simulator-3d/
 └── README.md
 ```
 
+### Current source structure
+
+What the project actually settled on (see the main [README's Project structure](../../README.md#project-structure) for the full, up-to-date tree):
+
+```text
+mini-driving-simulator-3d/
+├── doc/step-by-step/               # This guide and the rest of the docs
+├── input/                          # car-v1.glb (used by index.html) and later .blend/.glb iterations
+├── src/
+│   ├── components/
+│   │   ├── vehicle-controller.js   # Driving physics, keyboard input, collisions/recoil, reset, boundary-walls
+│   │   ├── follow-camera.js        # Chase and overhead camera modes
+│   │   └── scenery.js              # Stone-wall/parking/exterior-landscape textures, cloudy sky
+│   └── controls/
+│       └── gamepad-input.js        # Gamepad API -> logical driving input (Xbox-standard + DroidJoy fallback)
+├── index.html
+└── README.md
+```
+
+There is no `assets/` folder and no separate `keyboard.js` — keyboard handling stayed inline in `vehicle-controller.js`, which also grew to include the `boundary-walls` A-Frame component (the walls and gated entrance), beyond what the original phase-by-phase plan proposed.
+
 ## Minimum viable project
 
 The first version is complete when all of these work:
 
-- [ ] Browser scene opens without errors.
-- [ ] Blender car loads.
-- [ ] Scale and orientation are correct.
-- [ ] Keyboard can move the car.
-- [ ] Gamepad is detected.
-- [ ] Left stick steers.
-- [ ] Trigger accelerates.
-- [ ] Brake/reverse input works.
-- [ ] Camera follows the car.
-- [ ] Vehicle can be reset.
+- [x] Browser scene opens without errors.
+- [x] Blender car loads.
+- [x] Scale and orientation are correct.
+- [x] Keyboard can move the car.
+- [x] Gamepad is detected.
+- [x] Left stick steers.
+- [x] Trigger accelerates.
+- [x] Brake/reverse input works.
+- [x] Camera follows the car.
+- [x] Vehicle can be reset.
+
+All ten items are live in the current build — try it at the [live demo](../../README.md).
 
 ## Good second-version features
 
-After the minimum version works, consider:
+After the minimum version works, consider (kept in sync with the [README Roadmap](../../README.md#roadmap)):
 
 - [ ] wheel rotation;
 - [ ] front-wheel steering animation;
@@ -293,7 +326,8 @@ After the minimum version works, consider:
 - [x] multiple camera modes;
 - [x] better lighting;
 - [ ] larger Blender environment;
-- [ ] mobile touch controls.
+- [ ] mobile touch controls;
+- [ ] non-Xbox controller support via [InputMapper](https://apps.microsoft.com/detail/9mzxvnfhgdw7?hl=en-US&gl=PT) (XInput emulation) — not implemented yet, only tracked as a roadmap idea.
 
 ## What not to build first
 

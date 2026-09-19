@@ -48,6 +48,9 @@ Build the project in small milestones:
 - [x] control steering and speed;
 - [x] add a follow camera;
 - [x] add boundaries/collisions;
-- [ ] improve the model and environment.
+- [x] build a gated parking-lot environment (walls, gates, ground/exterior textures, sky);
+- [ ] keep improving the model and environment further.
 
 This approach makes it easier to identify whether a problem comes from the 3D model, browser scene, movement logic, or controller input.
+
+The remaining specific goals (wheel animation, checkpoints, lap timer, engine audio, non-Xbox controller support, mobile touch controls, a larger environment) are tracked in the [Complete Integration Guide's second-version list](05-integration-guide.md#good-second-version-features) and the main [README Roadmap](../../README.md#roadmap).
