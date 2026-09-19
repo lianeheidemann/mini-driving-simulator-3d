@@ -12,7 +12,7 @@ Phone touch controls → DroidJoy app → local Wi-Fi/Bluetooth → DroidJoy Ser
 
 ## 1. Check what the game already supports
 
-The current [gamepad input module](../../src/controls/gamepad-input.js) calls `navigator.getGamepads()` and selects the first connected controller whose browser `mapping` is `standard`. The [vehicle controller](../../src/components/vehicle-controller.js) applies its steering and throttle. This means the game needs **no code change** if DroidJoy's virtual controller appears in the browser with the expected standard mapping. XInput in Windows alone is not proof that the browser mapping and trigger values are correct; verify both below.
+The current [gamepad input module](../../src/controls/gamepad-input.js) calls `navigator.getGamepads()` and prefers a connected controller whose browser `mapping` is `standard`. If DroidJoy is exposed as a non-standard controller, the game automatically falls back to its numbered layout. The [vehicle controller](../../src/components/vehicle-controller.js) applies its steering and throttle.
 
 | Game action | Phone control in Xbox-style layout | Standard Gamepad API input |
 | --- | --- | --- |
@@ -24,6 +24,16 @@ The current [gamepad input module](../../src/controls/gamepad-input.js) calls `n
 | Toggle camera | Y | `buttons[3]` |
 
 The game subtracts LT from RT for throttle. Keep the left stick centered and both triggers released when testing idle input.
+
+For DroidJoy's non-standard numbered profile, its one-based server values are converted to the browser's zero-based button indices:
+
+| Game action | DroidJoy server number | Browser input |
+| --- | --- | --- |
+| Accelerate (RT) | `12` | `buttons[11]` |
+| Brake / reverse (LT) | `11` | `buttons[10]` |
+| Handbrake (A) | `1` | `buttons[0]` |
+| Reset (B) | `2` | `buttons[1]` |
+| Toggle camera (Y) | `4` | `buttons[3]` |
 
 ## 2. Install DroidJoy on both devices
 
@@ -69,8 +79,8 @@ console.log(pad && {
 });
 ```
 
-3. Run it again while holding each control. Expect `mapping: "standard"`, a centered `steering` near zero, and LT/RT values rising toward 1 when pressed. This console snippet is read-only.
-4. If `pad` is absent, press a button, click the game page, and reload it after DroidJoy is connected. If `mapping` is not `standard`, the current game code will reject this controller. If indices differ, record the actual values before changing the input mapping in `src/controls/gamepad-input.js`. Do not guess indices.
+3. Run it again while holding each control. With `mapping: "standard"`, expect LT/RT values in `buttons[6]` and `buttons[7]`. With an empty/non-standard mapping, the numbered DroidJoy fallback expects LT/RT in `buttons[10]` and `buttons[11]`. The centered `steering` value should remain near zero. This console snippet is read-only.
+4. If `pad` is absent, press a button, click the game page, and reload it after DroidJoy is connected. If the reported indices differ from both supported profiles, record the actual values before changing the input mapping in `src/controls/gamepad-input.js`.
 
 ## 6. Drive and accept the integration
 
@@ -80,7 +90,7 @@ The phase is complete when:
 
 - [ ] DroidJoy Server exposes one virtual XInput controller in Windows.
 - [ ] The phone operates its controls in `joy.cpl`.
-- [ ] The PC browser reports `mapping: "standard"` and the expected stick, trigger and button indices.
+- [ ] The PC browser reports either `mapping: "standard"` or the expected DroidJoy numbered button indices.
 - [ ] The game's status says “Controle conectado” and all six actions above work.
 
 ## Troubleshooting by layer
@@ -90,7 +100,7 @@ The phase is complete when:
 | Phone cannot find the server | Same reachable local network, server running, Windows firewall permission for DroidJoy on the private network; follow the [DroidJoy FAQ](https://github.com/grill2010/DroidJoy_Server/wiki/FAQ). |
 | Phone connects, but `joy.cpl` has no gamepad | Server's XInput virtual device and driver installation; restart the server after changing the output profile. |
 | Windows sees the pad, browser does not | Start DroidJoy before opening/reloading the game; focus the page and press a button. Try a current desktop browser. |
-| Game says “Controle sem mapeamento padrão” | Check `pad.mapping`; the current code deliberately accepts only `standard`. Verify XInput output in DroidJoy Server. |
+| Game says “DroidJoy numerado”, but controls are wrong | Check that the server uses A=`1`, B=`2`, Y=`4`, LT=`11`, and RT=`12`; inspect the browser indices if necessary. |
 | Game says connected, but controls are wrong | Inspect `axes[0]` and `buttons[0,1,3,6,7]` in the console while pressing each control; adjust DroidJoy's layout or the code only after measuring. |
 | Vehicle stops when switching windows | Keep the game tab focused; `vehicle-controller.js` pauses on hidden or unfocused documents. |
 

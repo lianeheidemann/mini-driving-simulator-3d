@@ -54,6 +54,26 @@ The car's initial 3D model was generated with [Tripo3D](https://www.tripo3d.ai/)
 
 The gamepad is read through the standard [`navigator.getGamepads()`](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/getGamepads) mapping; connect a controller and press any button to activate it.
 
+### DroidJoy Xbox emulation
+
+With **Activate XInput gamepad** enabled, DroidJoy creates a virtual Xbox/XInput-compatible controller in Windows. The input path is:
+
+```text
+Phone -> DroidJoy Server -> virtual XInput controller -> browser Gamepad API -> game
+```
+
+The numbers displayed by DroidJoy configure the phone controls; they are not keyboard keys. When the browser reports `mapping: "standard"`, it converts them to the standard Gamepad API indices automatically:
+
+| Control | DroidJoy number | Standard browser index | Game action |
+| --- | ---: | ---: | --- |
+| A | `1` | `buttons[0]` | Handbrake |
+| B | `2` | `buttons[1]` | Reset vehicle |
+| Y | `4` | `buttons[3]` | Toggle camera |
+| LT | `11` | `buttons[6]` | Brake / reverse |
+| RT | `12` | `buttons[7]` | Accelerate |
+
+If DroidJoy appears in the browser without a `standard` mapping, the game also supports its numbered fallback: A=`buttons[0]`, B=`buttons[1]`, Y=`buttons[3]`, LT=`buttons[10]`, and RT=`buttons[11]`. Steering remains on the horizontal axis of the left stick (`axes[0]`).
+
 ## Getting started
 
 The project is a static site with no build step, but the browser's `file://` origin blocks glTF/texture loading, so serve it over HTTP:
