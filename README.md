@@ -45,14 +45,16 @@ The car's initial 3D model was generated with [Tripo3D](https://www.tripo3d.ai/)
 
 | Action | Keyboard | Gamepad |
 | --- | --- | --- |
-| Steer | A/D or ←/→ | Left stick |
-| Accelerate | W or ↑ | Right trigger (RT) |
-| Brake / reverse | S or ↓ | Left trigger (LT) |
+| Steer | A/D or ←/→ | Either stick or D-pad |
+| Accelerate | W or ↑ | RT (analog) or RB (digital) |
+| Brake / reverse | S or ↓ | LT (analog) or LB (digital) |
 | Handbrake | Space | A |
 | Reset vehicle | R | B |
-| Toggle camera | Y | Y |
+| Toggle camera | Y | Y or DroidJoy screen button (`8`) |
 
 The gamepad is read through the standard [`navigator.getGamepads()`](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/getGamepads) mapping; connect a controller and press any button to activate it.
+
+For touch controllers, **RB also accelerates, LB also brakes/reverses, and the D-pad can steer**. These digital alternatives reproduce the immediate response of the keyboard while RT/LT and either virtual stick remain available for analog control. Moving the stick left replaces holding `A`; moving it right replaces holding `D`, including while accelerating.
 
 ### DroidJoy Xbox emulation
 
@@ -69,10 +71,30 @@ The numbers displayed by DroidJoy configure the phone controls; they are not key
 | A | `1` | `buttons[0]` | Handbrake |
 | B | `2` | `buttons[1]` | Reset vehicle |
 | Y | `4` | `buttons[3]` | Toggle camera |
+| LB | `5` | `buttons[4]` | Brake / reverse (digital) |
+| RB | `6` | `buttons[5]` | Accelerate (digital) |
+| Screen / Start | `8` | `buttons[9]` | Toggle camera |
 | LT | `11` | `buttons[6]` | Brake / reverse |
 | RT | `12` | `buttons[7]` | Accelerate |
 
-If DroidJoy appears in the browser without a `standard` mapping, the game also supports its numbered fallback: A=`buttons[0]`, B=`buttons[1]`, Y=`buttons[3]`, LT=`buttons[10]`, and RT=`buttons[11]`. Steering remains on the horizontal axis of the left stick (`axes[0]`).
+For a more comfortable DroidJoy touch layout, use the wide shoulder controls as digital pedals: LB=`5` brakes/reverses and RB=`6` accelerates. This is an additional mapping; LT=`11` and RT=`12` continue to work.
+
+#### Custom DroidJoy Lite layout
+
+<img src="media/DroidJoy-Lite.jpg" alt="Custom DroidJoy Lite controller layout" width="50%">
+
+| Visible control | DroidJoy setting | Game action |
+| --- | ---: | --- |
+| Large center stick | Left or right virtual stick | Steer: left replaces keyboard `A`, right replaces `D` |
+| `L` shoulder | `5` (LB) | Brake / reverse |
+| `R` shoulder | `6` (RB) | Accelerate |
+| A | `1` | Handbrake |
+| B | `2` | Reset vehicle |
+| Two-rectangles button | `8` (Screen / Start) | Toggle camera, like keyboard `Y` |
+
+The stick and accelerator work simultaneously: keep one thumb on the stick while holding `R` with another finger. The game accepts the custom stick whether DroidJoy exposes it as the left or right Xbox stick.
+
+If DroidJoy appears in the browser without a `standard` mapping, the game also supports its numbered fallback: A=`buttons[0]`, B=`buttons[1]`, Y=`buttons[3]`, LB=`buttons[4]`, RB=`buttons[5]`, screen button 8=`buttons[7]`, LT=`buttons[10]`, and RT=`buttons[11]`. Steering accepts the horizontal axis of either virtual stick (`axes[0]` or `axes[2]`).
 
 ## Getting started
 
