@@ -118,8 +118,8 @@ mini-driving-simulator-3d/
 │   └── step-by-step/              # Learning-oriented guides for the stack
 │       ├── README.md
 │       └── archive/               # Earlier, superseded guides (Blender, A-Frame, Three.js, gamepad)
-├── input/                        # Source 3D assets (.glb / .blend)
-├── media/                        # Screenshots and controller-layout images used in the docs
+├── input/                         # Source 3D assets (.glb / .blend)
+├── media/                         # Screenshots and controller-layout images used in the docs
 ├── src/
 │   ├── components/                # A-Frame components
 │   │   ├── vehicle-controller.js  # Driving physics, keyboard input, collisions/recoil, reset, boundary walls
@@ -127,7 +127,7 @@ mini-driving-simulator-3d/
 │   │   └── scenery.js             # Stone walls, parking surface, exterior landscape, sky textures
 │   └── controls/
 │       └── gamepad-input.js       # Gamepad API -> logical driving input
-├── index.html                    # Scene entry point
+├── index.html                     # Scene entry point
 ├── LICENSE
 └── README.md
 ```
