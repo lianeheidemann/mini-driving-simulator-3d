@@ -132,7 +132,7 @@ mini-driving-simulator-3d/
 └── README.md
 ```
 
-See the [Complete Integration Guide](doc/step-by-step/05-integration-guide.md#good-second-version-features) for the same list kept alongside the step-by-step docs.
+See the [Complete Integration Guide](doc/step-by-step/) for the same list kept alongside the step-by-step docs.
 
 ## License
 
