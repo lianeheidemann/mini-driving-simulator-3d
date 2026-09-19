@@ -10,8 +10,8 @@ Read the documents in this order:
 2. [A-Frame scene setup](archive/02-aframe.md)
 3. [Three.js in the project](archive/03-threejs.md)
 4. [Gamepad and Xbox-compatible input](archive/04-gamepad-input.md)
-5. [Complete integration guide](05-integration-guide.md)
-6. [Use an Android phone as an Xbox-compatible controller with DroidJoy](06-droidjoy-phone-controller.md)
+5. [Complete integration guide](archive/05-integration-guide.md)
+6. [Use an Android phone as an Xbox-compatible controller with DroidJoy](archive/06-droidjoy-phone-controller.md)
 
 ## What each layer does
 
@@ -53,4 +53,4 @@ Build the project in small milestones:
 
 This approach makes it easier to identify whether a problem comes from the 3D model, browser scene, movement logic, or controller input.
 
-The remaining specific goals (wheel animation, checkpoints, lap timer, engine audio, non-Xbox controller support, mobile touch controls, a larger environment) are tracked in the [Complete Integration Guide's second-version list](05-integration-guide.md#good-second-version-features) and the main [README Roadmap](../../README.md#roadmap).
+The remaining specific goals (wheel animation, checkpoints, lap timer, engine audio, non-Xbox controller support, mobile touch controls, a larger environment) are tracked in the [Complete Integration Guide's second-version list](archive/05-integration-guide.md#good-second-version-features).
