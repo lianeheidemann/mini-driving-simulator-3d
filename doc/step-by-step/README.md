@@ -11,6 +11,7 @@ Read the documents in this order:
 3. [Three.js in the project](archive/03-threejs.md)
 4. [Gamepad and Xbox-compatible input](archive/04-gamepad-input.md)
 5. [Complete integration guide](05-integration-guide.md)
+6. [Use an Android phone as an Xbox-compatible controller with DroidJoy](06-droidjoy-phone-controller.md)
 
 ## What each layer does
 
