@@ -18,7 +18,7 @@ A browser-based 3D driving simulator built with **[Blender](https://www.blender.
 
 ## Overview
 
-Load a car model exported from Blender into a small parking-lot scene and drive it around with arcade-style handling: acceleration, braking/reverse, steering, a handbrake, wall collisions with recoil, a live speedometer, and two camera modes.
+The car's initial 3D model was generated with [Tripo3D](https://www.tripo3d.ai/) and prepared in Blender for use in the simulator. Drive it around a small parking-lot scene with arcade-style handling: acceleration, braking/reverse, steering, a handbrake, wall collisions with recoil, a live speedometer, and two camera modes.
 
 ## Features
 
@@ -34,7 +34,8 @@ Load a car model exported from Blender into a small parking-lot scene and drive 
 
 | Technology | Role in the project |
 | --- | --- |
-| [Blender](https://www.blender.org/) | Creates and prepares the car and any other 3D assets. |
+| [Tripo3D](https://www.tripo3d.ai/) | Generated the initial 3D car model. |
+| [Blender](https://www.blender.org/) | Prepares the 3D model and other assets for use in the simulator. |
 | [glTF / GLB](https://www.khronos.org/gltf/) | Format used to export 3D models from Blender to the browser. |
 | [A-Frame](https://aframe.io/) | HTML-like structure for the 3D scene, entities, and custom components. |
 | [Three.js](https://threejs.org/) | Lower-level access to vectors, quaternions, and custom per-frame logic (used through A-Frame). |
