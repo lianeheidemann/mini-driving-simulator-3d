@@ -1,4 +1,4 @@
-/* Simple keyboard driving, without realistic vehicle physics. */
+/* Arcade vehicle physics driven by normalized input. */
 AFRAME.registerComponent('vehicle-controller', {
   schema: {
     ground: { type: 'selector' },
@@ -8,7 +8,7 @@ AFRAME.registerComponent('vehicle-controller', {
   },
 
   init() {
-    this.keys = new Set();
+    this.keyboardInput = new window.DrivingKeyboardInput();
     this.gamepadInput = new window.DrivingGamepadInput(document.querySelector('#gamepad-status'));
     this.speed = 0;
     this.speedometer = document.querySelector('#speedometer');
@@ -22,24 +22,8 @@ AFRAME.registerComponent('vehicle-controller', {
     this.startQuaternion = this.el.object3D.quaternion.clone();
     this.forward = new AFRAME.THREE.Vector3();
     this.carBounds = new AFRAME.THREE.Box3();
-    this.onKeyDown = (event) => {
-      if (!['KeyW', 'KeyS', 'KeyA', 'KeyD', 'ArrowUp', 'ArrowDown',
-        'ArrowLeft', 'ArrowRight', 'Space', 'KeyR', 'KeyY'].includes(event.code)) return;
-      if (event.target.closest && event.target.closest('input, textarea, select, [contenteditable]')) return;
-      event.preventDefault();
-      if (event.code === 'KeyY') {
-        if (!event.repeat) this.el.emit('camera-toggle');
-        return;
-      }
-      if (event.code === 'KeyR') {
-        this.resetVehicle();
-        return;
-      }
-      this.keys.add(event.code);
-    };
-    this.onKeyUp = (event) => this.keys.delete(event.code);
     this.clearInput = () => {
-      this.keys.clear();
+      this.keyboardInput.clear();
       this.speed = 0;
       this.recoilTime = 0;
       this.resetImpact();
@@ -48,17 +32,24 @@ AFRAME.registerComponent('vehicle-controller', {
     this.onVisibilityChange = () => {
       if (document.hidden) this.clearInput();
     };
-    window.addEventListener('keydown', this.onKeyDown);
-    window.addEventListener('keyup', this.onKeyUp);
     window.addEventListener('blur', this.clearInput);
     document.addEventListener('visibilitychange', this.onVisibilityChange);
   },
 
   tick(time, delta) {
     if (!delta || document.hidden || !document.hasFocus()) return;
+    const keyboard = this.keyboardInput.read();
     const gamepad = this.gamepadInput.read();
-    if (gamepad.reset) this.resetVehicle();
-    if (gamepad.camera) this.el.emit('camera-toggle');
+    // Keyboard takes precedence on each analog axis; either source can trigger actions.
+    const input = {
+      throttle: keyboard.throttle || gamepad.throttle,
+      steering: keyboard.steering || gamepad.steering,
+      handbrake: keyboard.handbrake || gamepad.handbrake,
+      reset: keyboard.reset || gamepad.reset,
+      camera: keyboard.camera || gamepad.camera
+    };
+    if (input.reset) this.resetVehicle();
+    if (input.camera) this.el.emit('camera-toggle');
     if (!this.el.getObject3D('mesh')) return;
     const dt = Math.min(delta / 1000, 0.05);
     const mesh = this.el.getObject3D('mesh');
@@ -77,12 +68,7 @@ AFRAME.registerComponent('vehicle-controller', {
       this.updateSpeedometer();
       return;
     }
-    const pressed = (...codes) => codes.some((code) => this.keys.has(code));
-    const keyboardThrottle = Number(pressed('KeyW', 'ArrowUp')) - Number(pressed('KeyS', 'ArrowDown'));
-    const keyboardSteering = Number(pressed('KeyA', 'ArrowLeft')) - Number(pressed('KeyD', 'ArrowRight'));
-    const throttle = keyboardThrottle || gamepad.throttle;
-    const steering = keyboardSteering || gamepad.steering;
-    const handbrake = pressed('Space') || gamepad.handbrake;
+    const { throttle, steering, handbrake } = input;
     if (this.recoilTime > 0 || handbrake || throttle === 0) {
       const slowing = (handbrake ? 12 : 3) * dt;
       this.speed = Math.sign(this.speed) * Math.max(0, Math.abs(this.speed) - slowing);
@@ -125,7 +111,7 @@ AFRAME.registerComponent('vehicle-controller', {
     this.resetImpact();
     this.el.emit('vehicle-reset');
     if (this.flashAnimation) this.flashAnimation.cancel();
-    this.keys.clear();
+    this.keyboardInput.clear();
     this.updateSpeedometer();
   },
 
@@ -199,8 +185,7 @@ AFRAME.registerComponent('vehicle-controller', {
   remove() {
     this.resetImpact();
     if (this.flashAnimation) this.flashAnimation.cancel();
-    window.removeEventListener('keydown', this.onKeyDown);
-    window.removeEventListener('keyup', this.onKeyUp);
+    this.keyboardInput.remove();
     window.removeEventListener('blur', this.clearInput);
     document.removeEventListener('visibilitychange', this.onVisibilityChange);
   }
