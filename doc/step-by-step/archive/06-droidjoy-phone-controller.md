@@ -12,7 +12,7 @@ Phone touch controls → DroidJoy app → local Wi-Fi/Bluetooth → DroidJoy Ser
 
 ## 1. Check what the game already supports
 
-The current [gamepad input module](../../src/controls/gamepad-input.js) calls `navigator.getGamepads()` and prefers a connected controller whose browser `mapping` is `standard`. If DroidJoy is exposed as a non-standard controller, the game automatically falls back to its numbered layout. The [vehicle controller](../../src/components/vehicle-controller.js) applies its steering and throttle.
+The current [gamepad input module](../../../src/controls/gamepad-input.js) calls `navigator.getGamepads()` and prefers a connected controller whose browser `mapping` is `standard`. If DroidJoy is exposed as a non-standard controller, the game automatically falls back to its numbered layout. The [vehicle controller](../../../src/components/vehicle-controller.js) applies its steering and throttle.
 
 | Game action | Phone control in Xbox-style layout | Standard Gamepad API input |
 | --- | --- | --- |
@@ -29,7 +29,7 @@ The game subtracts braking from acceleration. RT/LT preserve analog pressure; RB
 
 A full Xbox layout wastes touch space and makes it too easy to lose the controls under the thumbs. Keep the Xbox/XInput logic, but leave only the controls the simulator uses:
 
-<img src="/media/DroidJoy-Lite-v2.png" alt="Custom DroidJoy Lite controller layout" width="50%">
+<img src="../../../media/DroidJoy-Lite-v2.png" alt="Custom DroidJoy Lite controller layout" width="50%">
 
 ```text
 ┌──────────────────────────────────────────────────────────┐

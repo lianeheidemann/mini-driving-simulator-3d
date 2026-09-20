@@ -1,6 +1,6 @@
 # Complete Integration Guide
 
-[← Back to documentation index](README.md)
+[← Back to documentation index](../README.md)
 
 This guide describes a practical order for creating the first working version of the simulator.
 
@@ -8,7 +8,7 @@ The target is intentionally modest:
 
 > Load a Blender car in the browser and drive it forward, backward, left, and right with a gamepad.
 
-> **Status:** every phase and checklist item below is implemented in the current codebase. The guide is kept as a learning path for anyone rebuilding the project from scratch; code snippets and paths were updated to match what actually ships today. Anything still missing lives in [Good second-version features](#good-second-version-features) and in the main [README Roadmap](../../README.md#roadmap).
+> **Status:** every phase and checklist item below is implemented in the current codebase. The guide is kept as a learning path for anyone rebuilding the project from scratch; code snippets and paths were updated to match what actually ships today. Anything still missing lives in [Good second-version features](#good-second-version-features) below, and further extensions in [guide 07](07-advanced-rendering-techniques.md).
 
 ## Phase 1 — Create the web scene
 
@@ -135,7 +135,7 @@ The vehicle controller should not need to know which physical button index produ
 
 This is an important separation of responsibilities.
 
-> `DrivingGamepadInput.read()` returns `{ throttle, steering, handbrake, reset, camera }`, where `throttle` already combines the accelerate/brake triggers into one signed value and `camera` toggles the view (see [gamepad-input.js](../../src/controls/gamepad-input.js)). It also auto-selects between the browser's `standard` mapping (Xbox-compatible controllers) and a numbered fallback used by DroidJoy — see [06-droidjoy-phone-controller.md](06-droidjoy-phone-controller.md).
+> `DrivingGamepadInput.read()` returns `{ throttle, steering, handbrake, reset, camera }`, where `throttle` already combines the accelerate/brake triggers into one signed value and `camera` toggles the view (see [gamepad-input.js](../../../src/controls/gamepad-input.js)). It also auto-selects between the browser's `standard` mapping (Xbox-compatible controllers) and a numbered fallback used by DroidJoy — see [06-droidjoy-phone-controller.md](06-droidjoy-phone-controller.md).
 
 ## Phase 7 — Connect input to movement
 
@@ -276,7 +276,7 @@ mini-driving-simulator-3d/
 
 ### Current source structure
 
-What the project actually settled on (see the main [README's Project structure](../../README.md#project-structure) for the full, up-to-date tree):
+What the project actually settled on (see the main [README's Project structure](../../../README.md#project-structure) for the full, up-to-date tree):
 
 ```text
 mini-driving-simulator-3d/
@@ -310,11 +310,11 @@ The first version is complete when all of these work:
 - [x] Camera follows the car.
 - [x] Vehicle can be reset.
 
-All ten items are live in the current build — try it at the [live demo](../../README.md).
+All ten items are live in the current build — try it at the [live demo](../../../README.md).
 
 ## Good second-version features
 
-After the minimum version works, consider (kept in sync with the [README Roadmap](../../README.md#roadmap)):
+After the minimum version works, consider:
 
 - [ ] wheel rotation;
 - [ ] front-wheel steering animation;

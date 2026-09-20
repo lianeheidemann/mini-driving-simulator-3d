@@ -16,14 +16,14 @@ reworking the others.
 ## 1. Custom shader for the car paint
 
 **Current state:** the car mesh (`#car-model` in
-[`index.html`](../../index.html)) keeps whatever `MeshStandardMaterial`
+[`index.html`](../../../index.html)) keeps whatever `MeshStandardMaterial`
 glTF exports with — `roughness`/`metalness` only, no view-dependent term.
 
 **Proposal:** inject a fresnel-based rim term through
 `material.onBeforeCompile` (or swap in a small `ShaderMaterial` for the
 body mesh once `model-loaded` fires), so the paint brightens toward
 grazing angles independent of the light rig. Hook point:
-[`vehicle-controller.js`](../../src/components/vehicle-controller.js)
+[`vehicle-controller.js`](../../../src/components/vehicle-controller.js)
 already listens for the mesh becoming available (`this.el.getObject3D('mesh')`
 in `tick()`) — the material swap belongs next to that, not in a new
 component.
@@ -34,7 +34,7 @@ GLSL control flow.
 
 ## 2. GPU-based procedural texture synthesis
 
-**Current state:** [`scenery.js`](../../src/components/scenery.js)'s
+**Current state:** [`scenery.js`](../../../src/components/scenery.js)'s
 `buildTexture()` rasterizes grass/road markings on a `<canvas>` with a
 hand-rolled LCG PRNG, once, on the CPU, then uploads the result as a
 `THREE.CanvasTexture`.
@@ -51,7 +51,7 @@ the door to changing seed/density at runtime without a CPU re-rasterize.
 ## 3. Slip-based tire model
 
 **Current state:** in `tick()` of
-[`vehicle-controller.js`](../../src/components/vehicle-controller.js),
+[`vehicle-controller.js`](../../../src/components/vehicle-controller.js),
 throttle maps to acceleration through one constant
 (`this.speed * throttle < 0 ? 12 : 5`), and steering authority scales only
 with `|speed|` — there is no notion of grip being exceeded.
@@ -71,14 +71,14 @@ the arcade feel intentionally, not accidentally.
 ## 4. Dynamic shadow-camera frustum
 
 **Current state:** the directional light in
-[`index.html`](../../index.html) has a hand-fitted orthographic frustum
+[`index.html`](../../../index.html) has a hand-fitted orthographic frustum
 (`shadowCameraLeft/Right/Top/Bottom: -25/25/25/-25`), sized once for the
 current scene extent.
 
 **Proposal:** compute the world-space bounding sphere of the shadow
 casters each frame (or on layout change, the same trigger `boundary-walls`
 already uses via its `layoutKey` in
-[`vehicle-controller.js`](../../src/components/vehicle-controller.js)) and
+[`vehicle-controller.js`](../../../src/components/vehicle-controller.js)) and
 fit the orthographic frustum to it. This is the same core idea behind a
 single cascade of cascaded shadow maps, just not split into cascades.
 
@@ -88,7 +88,7 @@ right" for one fixed layout.
 
 ## 5. Image-based ambient lighting
 
-**Current state:** [`index.html`](../../index.html) approximates sky/bounce
+**Current state:** [`index.html`](../../../index.html) approximates sky/bounce
 light with one `hemisphere` light — a flat two-color gradient, not derived
 from the actual sky.
 

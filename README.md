@@ -97,11 +97,12 @@ For touch controllers, **RB also accelerates, LB also brakes/reverses, and the D
 
 ### DroidJoy Xbox emulation
 
+Downloads: [DroidJoy app for Android](https://droidjoy-gamepad-joystick-lite.br.uptodown.com/android) and [DroidJoy Server for Windows](https://grill2010.github.io/droidJoy.html).
+
 An Android phone can act as an Xbox-compatible controller through
-[DroidJoy](https://grill2010.github.io/droidJoy.html), which exposes a
-virtual XInput device that the Gamepad API reads like any other controller
-(with a numbered-layout fallback when the browser doesn't report a
-`standard` mapping):
+DroidJoy, which exposes a virtual XInput device that the Gamepad API reads
+like any other controller (with a numbered-layout fallback when the
+browser doesn't report a `standard` mapping):
 
 ```text
 Phone -> DroidJoy Server -> virtual XInput controller -> browser Gamepad API -> game
