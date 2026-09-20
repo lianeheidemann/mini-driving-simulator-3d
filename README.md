@@ -58,6 +58,8 @@ For touch controllers, **RB also accelerates, LB also brakes/reverses, and the D
 
 ### DroidJoy Xbox emulation
 
+Downloads: [DroidJoy app for Android](https://droidjoy-gamepad-joystick-lite.br.uptodown.com/android) and [DroidJoy Server for Windows](https://grill2010.github.io/droidJoy.html).
+
 With **Activate XInput gamepad** enabled, DroidJoy creates a virtual Xbox/XInput-compatible controller in Windows. The input path is:
 
 ```text
