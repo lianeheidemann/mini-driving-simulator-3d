@@ -17,7 +17,47 @@ A browser-based 3D driving simulator built with **[Blender](https://www.blender.
 
 ## Overview
 
-The car's initial 3D model was generated with [Tripo3D](https://www.tripo3d.ai/) and prepared in Blender for use in the simulator. Drive it around a small parking-lot scene with arcade-style handling: acceleration, braking/reverse, steering, a handbrake, wall collisions with recoil, a live speedometer, and two camera modes.
+The car's initial 3D model was generated with [Tripo3D](https://www.tripo3d.ai/) and prepared in Blender for use in the simulator. It is drivable around a small parking-lot scene with arcade-style handling — acceleration, braking/reverse, steering, a handbrake, wall collisions with recoil, a live speedometer, and two camera modes — rendered in real time with A-Frame/Three.js on top of WebGL.
+
+## Graphics & engineering techniques
+
+Beyond gameplay, the project is a working example of several core real-time
+rendering and simulation concepts, implemented from scratch rather than
+taken off the shelf:
+
+- **Transform pipeline** — vehicle orientation is a `THREE.Quaternion`, not
+  Euler angles; the heading vector is taken from local to world space with
+  `applyQuaternion`, and motion is integrated frame by frame with a
+  clamped, frame-rate–independent `dt` for numerical stability.
+  See [`vehicle-controller.js`](src/components/vehicle-controller.js).
+- **Camera system** — a single `a-camera` switches between a chase view and
+  a top-down view. Orientation for both is derived with an auxiliary
+  off-scene camera's `lookAt`, blended between modes with
+  `slerpQuaternions`, eased with a smoothstep curve (`t²(3-2t)`), and
+  damped with frame-rate–independent exponential smoothing
+  (`1 - e^(-k·dt)`). The overhead height is solved from the camera's FOV so
+  the whole lot stays framed at any aspect ratio.
+  See [`follow-camera.js`](src/components/follow-camera.js).
+- **Lighting & shading** — a three-light rig (ambient + hemisphere +
+  directional) drives PBR materials (`roughness`/`metalness`), with PCF
+  soft shadow mapping and a manually fitted shadow-camera frustum on the
+  directional light. See [`index.html`](index.html).
+- **Procedural texturing** — the ground, grass, and stone-wall textures are
+  synthesized at runtime on an offscreen `<canvas>`, driven by a
+  self-contained deterministic PRNG (a linear congruential generator), then
+  uploaded as a `THREE.CanvasTexture` in the sRGB color space with
+  anisotropic filtering. See [`scenery.js`](src/components/scenery.js).
+- **Collision & physics** — an axis-aligned bounding box (`THREE.Box3`) is
+  swept against the parking-lot bounds every frame; a wall hit reflects the
+  car's velocity into a recoil impulse with exponential decay, paired with
+  a camera-shake feedback effect.
+  See [`vehicle-controller.js`](src/components/vehicle-controller.js).
+- **Asset pipeline** — [Tripo3D](https://www.tripo3d.ai/) (AI mesh
+  generation) → Blender (cleanup/export) → glTF/GLB → A-Frame/Three.js
+  (runtime loading and rendering).
+- **Input abstraction** — keyboard and Gamepad API devices are normalized
+  to one logical command schema before reaching the physics step; see
+  [Input pipeline](#input-pipeline) below.
 
 ## Features
 
@@ -57,45 +97,20 @@ For touch controllers, **RB also accelerates, LB also brakes/reverses, and the D
 
 ### DroidJoy Xbox emulation
 
-Downloads: [DroidJoy app for Android](https://droidjoy-gamepad-joystick-lite.br.uptodown.com/android) and [DroidJoy Server for Windows](https://grill2010.github.io/droidJoy.html).
-
-With **Activate XInput gamepad** enabled, DroidJoy creates a virtual Xbox/XInput-compatible controller in Windows. The input path is:
+An Android phone can act as an Xbox-compatible controller through
+[DroidJoy](https://grill2010.github.io/droidJoy.html), which exposes a
+virtual XInput device that the Gamepad API reads like any other controller
+(with a numbered-layout fallback when the browser doesn't report a
+`standard` mapping):
 
 ```text
 Phone -> DroidJoy Server -> virtual XInput controller -> browser Gamepad API -> game
 ```
 
-The numbers displayed by DroidJoy configure the phone controls; they are not keyboard keys. When the browser reports `mapping: "standard"`, it converts them to the standard Gamepad API indices automatically:
+<img src="media/DroidJoy-Lite-v2.png" alt="Custom DroidJoy Lite controller layout" width="35%">
 
-| Control | DroidJoy number | Standard browser index | Game action |
-| --- | ---: | ---: | --- |
-| A | `1` | `buttons[0]` | Handbrake |
-| B | `2` | `buttons[1]` | Reset vehicle |
-| Y | `4` | `buttons[3]` | Toggle camera |
-| LB | `5` | `buttons[4]` | Brake / reverse (digital) |
-| RB | `6` | `buttons[5]` | Accelerate (digital) |
-| Screen / Start | `8` | `buttons[9]` | Toggle camera |
-| LT | `11` | `buttons[6]` | Brake / reverse |
-| RT | `12` | `buttons[7]` | Accelerate |
-
-For a more comfortable DroidJoy touch layout, use the wide shoulder controls as digital pedals: LB=`5` brakes/reverses and RB=`6` accelerates. This is an additional mapping; LT=`11` and RT=`12` continue to work.
-
-#### Custom DroidJoy Lite layout
-
-<img src="media/DroidJoy-Lite-v2.png" alt="Custom DroidJoy Lite controller layout" width="50%">
-
-| Visible control | DroidJoy setting | Game action |
-| --- | ---: | --- |
-| Large center stick | Left or right virtual stick | Steer: left replaces keyboard `A`, right replaces `D` |
-| `L` shoulder | `5` (LB) | Brake / reverse |
-| `R` shoulder | `6` (RB) | Accelerate |
-| A | `1` | Handbrake |
-| B | `2` | Reset vehicle |
-| Two-rectangles button | `8` (Screen / Start) | Toggle camera, like keyboard `Y` |
-
-The stick and accelerator work simultaneously: keep one thumb on the stick while holding `R` with another finger. The game accepts the custom stick whether DroidJoy exposes it as the left or right Xbox stick.
-
-If DroidJoy appears in the browser without a `standard` mapping, the game also supports its numbered fallback: A=`buttons[0]`, B=`buttons[1]`, Y=`buttons[3]`, LB=`buttons[4]`, RB=`buttons[5]`, screen button 8=`buttons[7]`, LT=`buttons[10]`, and RT=`buttons[11]`. Steering accepts the horizontal axis of either virtual stick (`axes[0]` or `axes[2]`).
+Full setup, button-mapping tables, and a recommended touch layout are in the
+[DroidJoy phone-controller guide](doc/step-by-step/archive/06-droidjoy-phone-controller.md).
 
 ## Input pipeline
 
@@ -130,23 +145,23 @@ mini-driving-simulator-3d/
 ├── doc/
 │   └── step-by-step/              # Learning-oriented guides for the stack
 │       ├── README.md
-│       └── archive/               # Earlier, superseded guides (Blender, A-Frame, Three.js, gamepad)
+│       └── archive/               # Earlier, superseded guides (Blender, A-Frame, Three.js, gamepad, DroidJoy)
 ├── input/                         # Source 3D assets (.glb / .blend)
 ├── media/                         # Screenshots and controller-layout images used in the docs
 ├── src/
 │   ├── components/                # A-Frame components
 │   │   ├── vehicle-controller.js  # Driving physics, input combination, collisions/recoil, reset, boundary walls
 │   │   ├── follow-camera.js       # Chase and overhead camera modes
-│   │   └── scenery.js             # Stone walls, parking surface, exterior landscape, sky textures
+│   │   └── scenery.js             # Procedural textures: stone walls, parking surface, exterior landscape, sky
 │   └── controls/
 │       ├── gamepad-input.js       # Gamepad API -> logical driving input
 │       └── keyboard-input.js      # Keyboard events -> the same logical driving input
-├── index.html                     # Scene entry point
+├── index.html                     # Scene entry point, lighting/shadow setup
 ├── LICENSE
 └── README.md
 ```
 
-See [doc/step-by-step/](doc/step-by-step/) for the full build guide, including how to [use an Android phone as an Xbox-compatible controller with DroidJoy](doc/step-by-step/archive/06-droidjoy-phone-controller.md).
+See [doc/step-by-step/](doc/step-by-step/) for the full, milestone-by-milestone build guide.
 
 ## License
 
