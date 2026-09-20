@@ -33,11 +33,11 @@ A full Xbox layout wastes touch space and makes it too easy to lose the controls
 
 ```text
 ┌──────────────────────────────────────────────────────────┐
-│  LB — BRAKE / REVERSE             RB — ACCELERATE      │
-│                                                          │
-│       LARGE STICK                       B  reset          │
-│       left = A / right = D              A  handbrake      │
-│       screen button 8 = camera                             │
+│       LB — BRAKE / REVERSE               RB — ACCELERATE           │
+│                                                                    │
+│       LARGE STICK                        B  reset                  │
+│       left = A / right = D               A  handbrake              │
+│       screen button 8 = camera                                     │
 └──────────────────────────────────────────────────────────┘
 ```
 
