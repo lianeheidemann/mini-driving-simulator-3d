@@ -68,7 +68,7 @@ browser doesn't report a `standard` mapping):
 Phone -> DroidJoy Server -> virtual XInput controller -> browser Gamepad API -> game
 ```
 
-<img src="media/DroidJoy-Lite-v2.png" alt="Custom DroidJoy Lite controller layout" width="35%">
+<img src="media/joystick/DroidJoy-Lite-v4.png" alt="Custom DroidJoy Lite controller layout" width="35%">
 
 Full setup, button-mapping tables, and a recommended touch layout are in the
 [DroidJoy phone-controller guide](doc/step-by-step/archive/06-droidjoy-phone-controller.md).
