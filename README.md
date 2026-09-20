@@ -19,50 +19,6 @@ A browser-based 3D driving simulator built with **[Blender](https://www.blender.
 
 The car's initial 3D model was generated with [Tripo3D](https://www.tripo3d.ai/) and prepared in Blender for use in the simulator. It is drivable around a small parking-lot scene with arcade-style handling — acceleration, braking/reverse, steering, a handbrake, wall collisions with recoil, a live speedometer, and two camera modes — rendered in real time with A-Frame/Three.js on top of WebGL.
 
-## Graphics & engineering techniques
-
-Beyond gameplay, the project is a working example of several core real-time
-rendering and simulation concepts, implemented from scratch rather than
-taken off the shelf:
-
-- **Transform pipeline** — vehicle orientation is a `THREE.Quaternion`, not
-  Euler angles; the heading vector is taken from local to world space with
-  `applyQuaternion`, and motion is integrated frame by frame with a
-  clamped, frame-rate–independent `dt` for numerical stability.
-  See [`vehicle-controller.js`](src/components/vehicle-controller.js).
-- **Camera system** — a single `a-camera` switches between a chase view and
-  a top-down view. Orientation for both is derived with an auxiliary
-  off-scene camera's `lookAt`, blended between modes with
-  `slerpQuaternions`, eased with a smoothstep curve (`t²(3-2t)`), and
-  damped with frame-rate–independent exponential smoothing
-  (`1 - e^(-k·dt)`). The overhead height is solved from the camera's FOV so
-  the whole lot stays framed at any aspect ratio.
-  See [`follow-camera.js`](src/components/follow-camera.js).
-- **Lighting & shading** — a three-light rig (ambient + hemisphere +
-  directional) drives PBR materials (`roughness`/`metalness`), with PCF
-  soft shadow mapping and a manually fitted shadow-camera frustum on the
-  directional light. See [`index.html`](index.html).
-- **Procedural texturing** — the ground, grass, stone-wall, and sky textures
-  are synthesized at runtime on an offscreen `<canvas>`, each driven by its
-  own self-contained deterministic PRNG (a linear congruential generator),
-  then uploaded as a `THREE.CanvasTexture` in the sRGB color space with
-  anisotropic filtering. See
-  [`exterior-landscape.js`](src/components/exterior-landscape.js),
-  [`stone-wall.js`](src/components/stone-wall.js),
-  [`parking-surface.js`](src/components/parking-surface.js), and
-  [`cloudy-sky.js`](src/components/cloudy-sky.js).
-- **Collision & physics** — an axis-aligned bounding box (`THREE.Box3`) is
-  swept against the parking-lot bounds every frame; a wall hit reflects the
-  car's velocity into a recoil impulse with exponential decay, paired with
-  a camera-shake feedback effect.
-  See [`vehicle-controller.js`](src/components/vehicle-controller.js).
-- **Asset pipeline** — [Tripo3D](https://www.tripo3d.ai/) (AI mesh
-  generation) → Blender (cleanup/export) → glTF/GLB → A-Frame/Three.js
-  (runtime loading and rendering).
-- **Input abstraction** — keyboard and Gamepad API devices are normalized
-  to one logical command schema before reaching the physics step; see
-  [Input pipeline](#input-pipeline) below.
-
 ## Features
 
 - Keyboard and Gamepad API input normalized to the same driving commands.
