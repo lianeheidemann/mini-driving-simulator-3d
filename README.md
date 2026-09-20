@@ -149,8 +149,8 @@ http://localhost:8000
 mini-driving-simulator-3d/
 ├── doc/
 │   └── step-by-step/              # Learning-oriented guides for the stack
-│       ├── README.md
-│       └── archive/               # Earlier, superseded guides (Blender, A-Frame, Three.js, gamepad, DroidJoy)
+│       ├── README.md              # Guide index and learning path
+│       └── archive/               # The guides themselves, numbered 01-07
 ├── input/                         # Source 3D assets (.glb / .blend)
 ├── media/                         # Screenshots and controller-layout images used in the docs
 ├── src/

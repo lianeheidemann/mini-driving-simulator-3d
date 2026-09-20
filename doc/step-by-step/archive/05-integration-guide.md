@@ -109,7 +109,7 @@ This separates vehicle bugs from gamepad bugs.
 
 If keyboard movement works, the vehicle logic is probably correct.
 
-> In this project keyboard handling was kept inline in `vehicle-controller.js` (its `onKeyDown`/`onKeyUp` listeners and the `keys` set) rather than split into a separate `src/controls/keyboard.js` module — the separation described in Phase 6 turned out to matter for the gamepad, not the keyboard.
+> Keyboard handling started out inline in `vehicle-controller.js`, then moved into its own module — [`keyboard-input.js`](../../../src/controls/keyboard-input.js) — mirroring the gamepad module from Phase 6 below. Both readers return the same `{ throttle, steering, handbrake, reset, camera }` shape; see the main README's [Input pipeline](../../../README.md#input-pipeline).
 
 ## Phase 6 — Create a gamepad input module
 
@@ -276,24 +276,22 @@ mini-driving-simulator-3d/
 
 ### Current source structure
 
-What the project actually settled on (see the main [README's Project structure](../../../README.md#project-structure) for the full, up-to-date tree):
+The full, up-to-date tree lives in the main README's
+[Project structure](../../../README.md#project-structure) — it changes
+as the project evolves, so it is not duplicated here. The main
+differences from the proposed structure above:
 
-```text
-mini-driving-simulator-3d/
-├── doc/step-by-step/               # This guide and the rest of the docs
-├── input/                          # car-v1.glb (used by index.html) and later .blend/.glb iterations
-├── src/
-│   ├── components/
-│   │   ├── vehicle-controller.js   # Driving physics, keyboard input, collisions/recoil, reset, boundary-walls
-│   │   ├── follow-camera.js        # Chase and overhead camera modes
-│   │   └── scenery.js              # Stone-wall/parking/exterior-landscape textures, cloudy sky
-│   └── controls/
-│       └── gamepad-input.js        # Gamepad API -> logical driving input (Xbox-standard + DroidJoy fallback)
-├── index.html
-└── README.md
-```
-
-There is no `assets/` folder and no separate `keyboard.js` — keyboard handling stayed inline in `vehicle-controller.js`, which also grew to include the `boundary-walls` A-Frame component (the walls and gated entrance), beyond what the original phase-by-phase plan proposed.
+- No `assets/` folder; 3D assets live in `input/` instead.
+- `keyboard.js` and `gamepad.js` became `keyboard-input.js` and
+  `gamepad-input.js`, both under `src/controls/`, exactly as proposed —
+  see [Phase 5](#phase-5--add-keyboard-controls-first)'s note above.
+- `src/components/` ended up with one file per A-Frame component rather
+  than the two originally proposed: `vehicle-controller.js` and
+  `follow-camera.js` as planned, plus `boundary-walls.js` (the walls and
+  gated entrance, grown out of `vehicle-controller.js`) and four
+  procedural-texture components (`exterior-landscape.js`, `stone-wall.js`,
+  `parking-surface.js`, `cloudy-sky.js`) that replaced an earlier combined
+  `scenery.js`.
 
 ## Minimum viable project
 
