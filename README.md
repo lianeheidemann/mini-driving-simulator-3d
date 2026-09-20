@@ -22,7 +22,7 @@ The car's initial 3D model was generated with [Tripo3D](https://www.tripo3d.ai/)
 
 ## Features
 
-- Keyboard and Gamepad API input, auto-detected at runtime.
+- Keyboard and Gamepad API input normalized to the same driving commands.
 - Arcade vehicle physics: acceleration, braking, reverse, drag, and speed-sensitive steering.
 - Collision handling against the parking-lot boundary walls, with impact recoil and camera shake.
 - Two camera modes: chase camera and top-down overhead view, with smooth transitions.
@@ -98,6 +98,18 @@ The stick and accelerator work simultaneously: keep one thumb on the stick while
 
 If DroidJoy appears in the browser without a `standard` mapping, the game also supports its numbered fallback: A=`buttons[0]`, B=`buttons[1]`, Y=`buttons[3]`, LB=`buttons[4]`, RB=`buttons[5]`, screen button 8=`buttons[7]`, LT=`buttons[10]`, and RT=`buttons[11]`. Steering accepts the horizontal axis of either virtual stick (`axes[0]` or `axes[2]`).
 
+## Input pipeline
+
+Keyboard, Xbox-compatible gamepads, and DroidJoy continue to work with the controls listed above. The browser reads each device separately; this does **not** turn keyboard events into Xbox/XInput signals.
+
+```text
+Keyboard events -> keyboard-input.js --+
+                                       +-> vehicle-controller.js -> vehicle movement
+Gamepad API ----> gamepad-input.js ----+
+```
+
+Both input readers return the same logical commands: `{ throttle, steering, handbrake, reset, camera }`. `throttle` and `steering` are numeric values; the other commands are booleans. The vehicle controller combines those commands, then applies acceleration, steering, braking, collisions, and reset. If keyboard and gamepad are used together, a nonzero keyboard value takes priority on each driving axis; either device can activate the handbrake, reset, or camera. The combination and physics are still in `vehicle-controller.js`, rather than in separate pipeline modules.
+
 ## Getting started
 
 The project is a static site with no build step, but the browser's `file://` origin blocks glTF/texture loading, so serve it over HTTP:
@@ -124,11 +136,12 @@ mini-driving-simulator-3d/
 ├── media/                         # Screenshots and controller-layout images used in the docs
 ├── src/
 │   ├── components/                # A-Frame components
-│   │   ├── vehicle-controller.js  # Driving physics, keyboard input, collisions/recoil, reset, boundary walls
+│   │   ├── vehicle-controller.js  # Driving physics, input combination, collisions/recoil, reset, boundary walls
 │   │   ├── follow-camera.js       # Chase and overhead camera modes
 │   │   └── scenery.js             # Stone walls, parking surface, exterior landscape, sky textures
 │   └── controls/
-│       └── gamepad-input.js       # Gamepad API -> logical driving input
+│       ├── gamepad-input.js       # Gamepad API -> logical driving input
+│       └── keyboard-input.js      # Keyboard events -> the same logical driving input
 ├── index.html                     # Scene entry point
 ├── LICENSE
 └── README.md
