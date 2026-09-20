@@ -65,8 +65,8 @@ For DroidJoy's non-standard numbered profile, its one-based server values are co
 
 ## 2. Install DroidJoy on both devices
 
-1. On the Android phone, install [DroidJoy Lite](https://play.google.com/store/apps/details?id=com.grill.droidjoy_demo) for the initial test. The [paid version](https://play.google.com/store/apps/details?id=com.grill.droidjoy) is also available; the Lite layout and button options can be limited.
-2. On the Windows PC, download the **DroidJoy Server** from the [developer's download page](https://grill2010.github.io/droidJoy.html#download). Install the server and its required virtual controller driver using the installer instructions, then start the server.
+1. On the Android phone, install [DroidJoy Lite](https://play.google.com/store/apps/details?id=com.grill.droidjoy_demo) for the initial test, also available from [Uptodown](https://droidjoy-gamepad-joystick-lite.br.uptodown.com/android). The [paid version](https://play.google.com/store/apps/details?id=com.grill.droidjoy) is also available; the Lite layout and button options can be limited.
+2. On the Windows PC, download the **DroidJoy Server** from the [developer's download page](https://grill2010.github.io/droidJoy.html#download), also linked from the [DroidJoy software page](https://grill2010.github.io/droidJoy.html). Install the server and its required virtual controller driver using the installer instructions, then start the server.
 3. In the server's virtual gamepad settings, configure **one XInput / Xbox 360 controller**, not a DInput or keyboard-only profile. Consult the [developer's server tutorial](https://github.com/grill2010/DroidJoy_Server/wiki/DroidJoy-Server-Tutorial) if your server version labels the option differently.
 4. Keep the server running before opening the simulator. You do **not** need InputMapper in this route: DroidJoy Server creates the XInput output.
 
