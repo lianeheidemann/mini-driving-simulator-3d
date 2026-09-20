@@ -1,6 +1,6 @@
 # 06 — Use an Android phone as an Xbox-compatible controller with DroidJoy
 
-[← Documentation index](README.md)
+[← Back to documentation index](../README.md)
 
 This phase connects the **Android phone as the controller** to the simulator **running in a browser on the Windows PC**. DroidJoy provides the virtual controller; the game's existing Gamepad API code reads it. The phone does not send Xbox signals directly to the web page.
 
