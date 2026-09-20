@@ -42,11 +42,15 @@ taken off the shelf:
   directional) drives PBR materials (`roughness`/`metalness`), with PCF
   soft shadow mapping and a manually fitted shadow-camera frustum on the
   directional light. See [`index.html`](index.html).
-- **Procedural texturing** — the ground, grass, and stone-wall textures are
-  synthesized at runtime on an offscreen `<canvas>`, driven by a
-  self-contained deterministic PRNG (a linear congruential generator), then
-  uploaded as a `THREE.CanvasTexture` in the sRGB color space with
-  anisotropic filtering. See [`scenery.js`](src/components/scenery.js).
+- **Procedural texturing** — the ground, grass, stone-wall, and sky textures
+  are synthesized at runtime on an offscreen `<canvas>`, each driven by its
+  own self-contained deterministic PRNG (a linear congruential generator),
+  then uploaded as a `THREE.CanvasTexture` in the sRGB color space with
+  anisotropic filtering. See
+  [`exterior-landscape.js`](src/components/exterior-landscape.js),
+  [`stone-wall.js`](src/components/stone-wall.js),
+  [`parking-surface.js`](src/components/parking-surface.js), and
+  [`cloudy-sky.js`](src/components/cloudy-sky.js).
 - **Collision & physics** — an axis-aligned bounding box (`THREE.Box3`) is
   swept against the parking-lot bounds every frame; a wall hit reflects the
   car's velocity into a recoil impulse with exponential decay, paired with
@@ -150,10 +154,14 @@ mini-driving-simulator-3d/
 ├── input/                         # Source 3D assets (.glb / .blend)
 ├── media/                         # Screenshots and controller-layout images used in the docs
 ├── src/
-│   ├── components/                # A-Frame components
-│   │   ├── vehicle-controller.js  # Driving physics, input combination, collisions/recoil, reset, boundary walls
+│   ├── components/                # A-Frame components, one per file
+│   │   ├── vehicle-controller.js  # Driving physics, input combination, collisions/recoil, reset
+│   │   ├── boundary-walls.js      # Parking-lot walls and gated entrance, laid out from the ground size
 │   │   ├── follow-camera.js       # Chase and overhead camera modes
-│   │   └── scenery.js             # Procedural textures: stone walls, parking surface, exterior landscape, sky
+│   │   ├── exterior-landscape.js  # Procedural grass/road texture around the parking lot
+│   │   ├── stone-wall.js          # Procedural stone-block texture applied to the boundary walls
+│   │   ├── parking-surface.js     # Procedural parking-lot ground texture (bays, lanes, crosswalk)
+│   │   └── cloudy-sky.js          # Procedural gradient sky with cloud clusters
 │   └── controls/
 │       ├── gamepad-input.js       # Gamepad API -> logical driving input
 │       └── keyboard-input.js      # Keyboard events -> the same logical driving input

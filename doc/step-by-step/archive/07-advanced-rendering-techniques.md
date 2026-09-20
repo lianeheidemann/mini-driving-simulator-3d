@@ -34,10 +34,14 @@ GLSL control flow.
 
 ## 2. GPU-based procedural texture synthesis
 
-**Current state:** [`scenery.js`](../../../src/components/scenery.js)'s
+**Current state:**
+[`exterior-landscape.js`](../../../src/components/exterior-landscape.js)'s
 `buildTexture()` rasterizes grass/road markings on a `<canvas>` with a
 hand-rolled LCG PRNG, once, on the CPU, then uploads the result as a
-`THREE.CanvasTexture`.
+`THREE.CanvasTexture` — the same pattern repeats, with a different seed
+each, in [`stone-wall.js`](../../../src/components/stone-wall.js),
+[`parking-surface.js`](../../../src/components/parking-surface.js), and
+[`cloudy-sky.js`](../../../src/components/cloudy-sky.js).
 
 **Proposal:** replace the CPU rasterization with a fragment shader that
 reproduces the same deterministic pattern using a hash-based value-noise
@@ -76,11 +80,11 @@ the arcade feel intentionally, not accidentally.
 current scene extent.
 
 **Proposal:** compute the world-space bounding sphere of the shadow
-casters each frame (or on layout change, the same trigger `boundary-walls`
-already uses via its `layoutKey` in
-[`vehicle-controller.js`](../../../src/components/vehicle-controller.js)) and
-fit the orthographic frustum to it. This is the same core idea behind a
-single cascade of cascaded shadow maps, just not split into cascades.
+casters each frame (or on layout change, the same trigger
+[`boundary-walls.js`](../../../src/components/boundary-walls.js) already
+uses via its own `layoutKey`) and fit the orthographic frustum to it. This
+is the same core idea behind a single cascade of cascaded shadow maps,
+just not split into cascades.
 
 **Why this one:** demonstrates awareness of shadow-map texel density and
 the precision/coverage trade-off, instead of picking bounds that "look
