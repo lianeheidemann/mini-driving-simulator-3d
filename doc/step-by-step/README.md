@@ -54,3 +54,7 @@ Build the project in small milestones:
 This approach makes it easier to identify whether a problem comes from the 3D model, browser scene, movement logic, or controller input.
 
 The remaining specific goals (wheel animation, checkpoints, lap timer, engine audio, non-Xbox controller support, mobile touch controls, a larger environment) are tracked in the [Complete Integration Guide's second-version list](archive/05-integration-guide.md#good-second-version-features).
+
+## Going further
+
+Once the build above is working, [Advanced Rendering & Simulation Techniques](archive/07-advanced-rendering-techniques.md) proposes five extensions to the existing camera, lighting, texture, and vehicle systems — a custom paint shader, GPU-based procedural texturing, a slip-based tire model, a dynamic shadow-camera frustum, and image-based ambient lighting.

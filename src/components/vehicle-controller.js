@@ -1,4 +1,4 @@
-/* Simple keyboard driving, without realistic vehicle physics. */
+/* Arcade vehicle physics driven by normalized input. */
 AFRAME.registerComponent('vehicle-controller', {
   schema: {
     ground: { type: 'selector' },
@@ -8,11 +8,12 @@ AFRAME.registerComponent('vehicle-controller', {
   },
 
   init() {
-    this.keys = new Set();
+    this.keyboardInput = new window.DrivingKeyboardInput();
     this.gamepadInput = new window.DrivingGamepadInput(document.querySelector('#gamepad-status'));
     this.speed = 0;
     this.speedometer = document.querySelector('#speedometer');
     this.speedValue = document.querySelector('#speed-value');
+    this.reverseIndicator = document.querySelector('#reverse-indicator');
     this.impactCooldown = 0;
     this.recoilTime = 0;
     this.impactVelocity = new AFRAME.THREE.Vector3();
@@ -22,24 +23,8 @@ AFRAME.registerComponent('vehicle-controller', {
     this.startQuaternion = this.el.object3D.quaternion.clone();
     this.forward = new AFRAME.THREE.Vector3();
     this.carBounds = new AFRAME.THREE.Box3();
-    this.onKeyDown = (event) => {
-      if (!['KeyW', 'KeyS', 'KeyA', 'KeyD', 'ArrowUp', 'ArrowDown',
-        'ArrowLeft', 'ArrowRight', 'Space', 'KeyR', 'KeyY'].includes(event.code)) return;
-      if (event.target.closest && event.target.closest('input, textarea, select, [contenteditable]')) return;
-      event.preventDefault();
-      if (event.code === 'KeyY') {
-        if (!event.repeat) this.el.emit('camera-toggle');
-        return;
-      }
-      if (event.code === 'KeyR') {
-        this.resetVehicle();
-        return;
-      }
-      this.keys.add(event.code);
-    };
-    this.onKeyUp = (event) => this.keys.delete(event.code);
     this.clearInput = () => {
-      this.keys.clear();
+      this.keyboardInput.clear();
       this.speed = 0;
       this.recoilTime = 0;
       this.resetImpact();
@@ -48,17 +33,24 @@ AFRAME.registerComponent('vehicle-controller', {
     this.onVisibilityChange = () => {
       if (document.hidden) this.clearInput();
     };
-    window.addEventListener('keydown', this.onKeyDown);
-    window.addEventListener('keyup', this.onKeyUp);
     window.addEventListener('blur', this.clearInput);
     document.addEventListener('visibilitychange', this.onVisibilityChange);
   },
 
   tick(time, delta) {
     if (!delta || document.hidden || !document.hasFocus()) return;
+    const keyboard = this.keyboardInput.read();
     const gamepad = this.gamepadInput.read();
-    if (gamepad.reset) this.resetVehicle();
-    if (gamepad.camera) this.el.emit('camera-toggle');
+    // Keyboard takes precedence on each analog axis; either source can trigger actions.
+    const input = {
+      throttle: keyboard.throttle || gamepad.throttle,
+      steering: keyboard.steering || gamepad.steering,
+      handbrake: keyboard.handbrake || gamepad.handbrake,
+      reset: keyboard.reset || gamepad.reset,
+      camera: keyboard.camera || gamepad.camera
+    };
+    if (input.reset) this.resetVehicle();
+    if (input.camera) this.el.emit('camera-toggle');
     if (!this.el.getObject3D('mesh')) return;
     const dt = Math.min(delta / 1000, 0.05);
     const mesh = this.el.getObject3D('mesh');
@@ -77,12 +69,7 @@ AFRAME.registerComponent('vehicle-controller', {
       this.updateSpeedometer();
       return;
     }
-    const pressed = (...codes) => codes.some((code) => this.keys.has(code));
-    const keyboardThrottle = Number(pressed('KeyW', 'ArrowUp')) - Number(pressed('KeyS', 'ArrowDown'));
-    const keyboardSteering = Number(pressed('KeyA', 'ArrowLeft')) - Number(pressed('KeyD', 'ArrowRight'));
-    const throttle = keyboardThrottle || gamepad.throttle;
-    const steering = keyboardSteering || gamepad.steering;
-    const handbrake = pressed('Space') || gamepad.handbrake;
+    const { throttle, steering, handbrake } = input;
     if (this.recoilTime > 0 || handbrake || throttle === 0) {
       const slowing = (handbrake ? 12 : 3) * dt;
       this.speed = Math.sign(this.speed) * Math.max(0, Math.abs(this.speed) - slowing);
@@ -114,6 +101,9 @@ AFRAME.registerComponent('vehicle-controller', {
       this.speedValue.textContent = value;
       if (this.speedometer) this.speedometer.setAttribute('aria-valuenow', value);
     }
+    if (this.reverseIndicator) {
+      this.reverseIndicator.classList.toggle('visible', this.recoilTime === 0 && this.speed < -0.05);
+    }
   },
 
   resetVehicle() {
@@ -125,7 +115,7 @@ AFRAME.registerComponent('vehicle-controller', {
     this.resetImpact();
     this.el.emit('vehicle-reset');
     if (this.flashAnimation) this.flashAnimation.cancel();
-    this.keys.clear();
+    this.keyboardInput.clear();
     this.updateSpeedometer();
   },
 
@@ -199,106 +189,8 @@ AFRAME.registerComponent('vehicle-controller', {
   remove() {
     this.resetImpact();
     if (this.flashAnimation) this.flashAnimation.cancel();
-    window.removeEventListener('keydown', this.onKeyDown);
-    window.removeEventListener('keyup', this.onKeyUp);
+    this.keyboardInput.remove();
     window.removeEventListener('blur', this.clearInput);
     document.removeEventListener('visibilitychange', this.onVisibilityChange);
-  }
-});
-
-// The walls' inner faces coincide with the driving limits at the ground edges.
-AFRAME.registerComponent('boundary-walls', {
-  schema: {
-    ground: { type: 'selector' },
-    height: { default: 1 },
-    thickness: { default: 0.4 }
-  },
-
-  init() {
-    const createWall = () => {
-      const wall = document.createElement('a-box');
-      wall.setAttribute('material', 'color: #ffffff; roughness: 1; metalness: 0');
-      wall.setAttribute('stone-wall', '');
-      wall.setAttribute('shadow', 'cast: true; receive: true');
-      this.el.appendChild(wall);
-      return wall;
-    };
-    this.walls = Array.from({ length: 4 }, createWall);
-    this.walls[1].setAttribute('visible', false);
-    this.gateWallSections = Array.from({ length: 3 }, createWall);
-    this.gates = Array.from({ length: 2 }, () => {
-      const gate = document.createElement('a-entity');
-      const part = (y, z, height, depth, color = '#41494f') => {
-        const box = document.createElement('a-box');
-        box.setAttribute('geometry', { primitive: 'box', width: this.data.thickness, height, depth });
-        box.setAttribute('position', { x: 0, y, z });
-        box.setAttribute('material', { color, roughness: 0.65, metalness: 0.45 });
-        box.setAttribute('shadow', 'cast: true; receive: true');
-        gate.appendChild(box);
-      };
-      for (const y of [0.08, 0.5, 0.94]) part(y, 0, 0.06, 1);
-      for (let i = 0; i <= 20; i++) part(0.5, -0.5 + i / 20, 0.9, 0.012);
-      for (const z of [-0.5, 0.5]) part(0.5, z, 1, 0.025, '#777970');
-      // Red reflectors make the closed gates easy to identify from inside.
-      part(0.5, -0.07, 0.09, 0.025, '#bb493a');
-      part(0.5, 0.07, 0.09, 0.025, '#bb493a');
-      this.el.appendChild(gate);
-      return gate;
-    });
-    this.layoutKey = '';
-  },
-
-  tick() {
-    const ground = this.data.ground;
-    if (!ground) return;
-    const geometry = ground.getAttribute('geometry');
-    if (!geometry) return;
-    const floor = ground.object3D;
-    const width = geometry.width * Math.abs(floor.scale.x);
-    const depth = geometry.height * Math.abs(floor.scale.y);
-    const { height, thickness } = this.data;
-    const { x, y, z } = floor.position;
-    const layoutKey = [width, depth, height, thickness, x, y, z].join(',');
-    if (layoutKey === this.layoutKey) return;
-    this.layoutKey = layoutKey;
-    const layouts = [
-      [x - (width + thickness) / 2, z, thickness, depth + thickness * 2],
-      [x + (width + thickness) / 2, z, thickness, depth + thickness * 2],
-      [x, z - (depth + thickness) / 2, width, thickness],
-      [x, z + (depth + thickness) / 2, width, thickness]
-    ];
-    layouts.forEach(([wallX, wallZ, wallWidth, wallDepth], index) => {
-      this.walls[index].setAttribute('geometry', {
-        primitive: 'box', width: wallWidth, height, depth: wallDepth
-      });
-      this.walls[index].setAttribute('position', { x: wallX, y: y + height / 2, z: wallZ });
-    });
-    // The PARE markings occupy two lanes on the +X side of the parking texture.
-    const gateWidth = depth * 205 / 1024;
-    const offset = depth * 127 / 1024;
-    const wallX = x + (width + thickness) / 2;
-    const ranges = [
-      [-depth / 2 - thickness, -offset - gateWidth / 2],
-      [-offset + gateWidth / 2, offset - gateWidth / 2],
-      [offset + gateWidth / 2, depth / 2 + thickness]
-    ];
-    ranges.forEach(([start, end], index) => {
-      this.gateWallSections[index].setAttribute('geometry', {
-        primitive: 'box', width: thickness, height, depth: end - start
-      });
-      this.gateWallSections[index].setAttribute('position', {
-        x: wallX, y: y + height / 2, z: z + (start + end) / 2
-      });
-    });
-    this.gates.forEach((gate, index) => {
-      gate.setAttribute('position', { x: wallX, y, z: z + (index === 0 ? -offset : offset) });
-      gate.setAttribute('scale', { x: 1, y: height + 0.2, z: gateWidth });
-    });
-  },
-
-  remove() {
-    this.walls.forEach((wall) => wall.remove());
-    this.gateWallSections.forEach((wall) => wall.remove());
-    this.gates.forEach((gate) => gate.remove());
   }
 });
