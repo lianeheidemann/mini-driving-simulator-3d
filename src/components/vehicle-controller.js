@@ -13,6 +13,7 @@ AFRAME.registerComponent('vehicle-controller', {
     this.speed = 0;
     this.speedometer = document.querySelector('#speedometer');
     this.speedValue = document.querySelector('#speed-value');
+    this.reverseIndicator = document.querySelector('#reverse-indicator');
     this.impactCooldown = 0;
     this.recoilTime = 0;
     this.impactVelocity = new AFRAME.THREE.Vector3();
@@ -99,6 +100,9 @@ AFRAME.registerComponent('vehicle-controller', {
     if (this.speedValue.textContent !== value) {
       this.speedValue.textContent = value;
       if (this.speedometer) this.speedometer.setAttribute('aria-valuenow', value);
+    }
+    if (this.reverseIndicator) {
+      this.reverseIndicator.classList.toggle('visible', this.recoilTime === 0 && this.speed < -0.05);
     }
   },
 

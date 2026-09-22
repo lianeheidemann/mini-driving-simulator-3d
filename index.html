@@ -51,6 +51,18 @@
       letter-spacing: -1px;
       font-variant-numeric: tabular-nums;
     }
+    #speed-unit-row {
+      position: relative;
+    }
+    #reverse-indicator {
+      display: none;
+      position: absolute;
+      left: 0;
+      color: #ff6b6b;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    #reverse-indicator.visible { display: inline; }
     #camera-mode {
       bottom: 20px; left: 20px;
       max-width: calc(100vw - 120px);
@@ -72,6 +84,31 @@
       background: radial-gradient(ellipse, transparent 40%, rgba(220, 30, 30, 0.65));
       border: 6px solid rgba(220, 30, 30, 0.8);
     }
+    #fullscreen-button {
+      position: fixed;
+      z-index: 5;
+      right: 20px;
+      bottom: 20px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: linear-gradient(135deg, rgba(26, 38, 47, 0.92), rgba(16, 25, 32, 0.84));
+      color: #edf3f6;
+      font-size: 20px;
+      line-height: 1;
+      cursor: pointer;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+    }
+    @media (max-width: 480px) {
+      #fullscreen-button { right: 12px; bottom: 12px; width: 40px; height: 40px; font-size: 18px; }
+    }
+    body.is-fullscreen #gamepad-status,
+    body.is-fullscreen #speedometer,
+    body.is-fullscreen #camera-mode {
+      display: none;
+    }
   </style>
 
   <script src="https://aframe.io/releases/1.8.0/aframe.min.js"></script>
@@ -84,17 +121,23 @@
   <script src="./src/components/stone-wall.js"></script>
   <script src="./src/components/parking-surface.js"></script>
   <script src="./src/components/cloudy-sky.js"></script>
+  <script src="./src/components/fullscreen-button.js"></script>
 </head>
 
 <body>
   <div id="camera-mode">Câmera: atrás do carro · Y para trocar</div>
   <div id="speedometer" role="meter" aria-label="Velocidade em quilômetros por hora"
     aria-valuemin="0" aria-valuemax="60" aria-valuenow="0">
-    <span id="speed-value">0</span> km/h
+    <span id="speed-value">0</span>
+    <div id="speed-unit-row">
+      <span id="reverse-indicator" aria-hidden="true">R</span>
+      <span id="speed-unit">km/h</span>
+    </div>
   </div>
   <div id="gamepad-status">Conecte o controle e pressione um botão. Teclado disponível.</div>
   <div id="collision-flash" aria-hidden="true"></div>
-  <a-scene shadow="type: pcfsoft">
+  <button id="fullscreen-button" type="button" aria-label="Tela cheia" aria-pressed="false">⤢</button>
+  <a-scene shadow="type: pcfsoft" xr-mode-ui="enabled: false">
 
     <a-assets>
         <a-asset-item
