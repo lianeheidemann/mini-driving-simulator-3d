@@ -17,7 +17,7 @@ A browser-based 3D driving simulator built with **[Blender](https://www.blender.
 
 ## Overview
 
-The car's initial 3D model was generated with [Tripo3D](https://www.tripo3d.ai/) and prepared in Blender for use in the simulator. It is drivable around a small parking-lot scene with arcade-style handling — acceleration, braking/reverse, steering, a handbrake, wall collisions with recoil, a live speedometer, and two camera modes — rendered in real time with A-Frame/Three.js on top of WebGL.
+The car's initial 3D model was generated with [Tripo3D](https://www.tripo3d.ai/) and prepared in Blender for use in the simulator. It is drivable around a small parking-lot scene with arcade-style handling — acceleration, braking/reverse, steering, a handbrake, wall collisions with recoil, a live speedometer, two camera modes, and a fullscreen mode — rendered in real time with A-Frame/Three.js on top of WebGL.
 
 ## Features
 
@@ -25,7 +25,8 @@ The car's initial 3D model was generated with [Tripo3D](https://www.tripo3d.ai/)
 - Arcade vehicle physics: acceleration, braking, reverse, drag, and speed-sensitive steering.
 - Collision handling against the parking-lot boundary walls, with impact recoil and camera shake.
 - Two camera modes: chase camera and top-down overhead view, with smooth transitions.
-- HUD with connected-controller status, live speedometer (km/h), and camera mode indicator.
+- HUD with connected-controller status, live speedometer (km/h) with an `R` indicator while reversing, and camera mode indicator.
+- Fullscreen button (browser Fullscreen API) that hides the non-essential HUD panels for a cleaner view; A-Frame's VR/XR button is disabled to avoid the stereo split view.
 - Procedurally laid out scenery: stone boundary walls, gated entrance, parking markings, and surrounding landscape.
 - Vehicle reset to the starting position/orientation at any time.
 
@@ -50,6 +51,7 @@ The car's initial 3D model was generated with [Tripo3D](https://www.tripo3d.ai/)
 | Handbrake | Space | A |
 | Reset vehicle | R | B |
 | Toggle camera | Y | Y or DroidJoy screen button (`8`) |
+| Toggle fullscreen | On-screen ⤢ button (bottom-right) | — |
 
 The gamepad is read through the standard [`navigator.getGamepads()`](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/getGamepads) mapping; connect a controller and press any button to activate it.
 
@@ -103,9 +105,12 @@ http://localhost:8000
 
 ```text
 mini-driving-simulator-3d/
+├── .github/
+│   ├── ISSUE_TEMPLATE/            # Bug report and feature request forms
+│   └── workflows/                 # HTML validation and GitHub Pages deploy
 ├── doc/
 │   └── step-by-step/              # Learning-oriented guides for the stack
-│       ├── README.md              # Guide index and learning path
+│       ├── README.md              # Guide index, learning path, and layer-to-file map
 │       └── archive/               # The guides themselves, numbered 01-07
 ├── input/                         # Source 3D assets (.glb / .blend)
 ├── media/                         # Screenshots and controller-layout images used in the docs
@@ -117,16 +122,17 @@ mini-driving-simulator-3d/
 │   │   ├── exterior-landscape.js  # Procedural grass/road texture around the parking lot
 │   │   ├── stone-wall.js          # Procedural stone-block texture applied to the boundary walls
 │   │   ├── parking-surface.js     # Procedural parking-lot ground texture (bays, lanes, crosswalk)
-│   │   └── cloudy-sky.js          # Procedural gradient sky with cloud clusters
+│   │   ├── cloudy-sky.js          # Procedural gradient sky with cloud clusters
+│   │   └── fullscreen-button.js   # Fullscreen toggle and fullscreen HUD state
 │   └── controls/
 │       ├── gamepad-input.js       # Gamepad API -> logical driving input
 │       └── keyboard-input.js      # Keyboard events -> the same logical driving input
-├── index.html                     # Scene entry point, lighting/shadow setup
+├── index.html                     # Scene entry point, HUD, lighting/shadow setup
 ├── LICENSE
 └── README.md
 ```
 
-See [doc/step-by-step/](doc/step-by-step/) for the full, milestone-by-milestone build guide.
+See [doc/step-by-step/](doc/step-by-step/) for the full, milestone-by-milestone build guide (guides 01–06 cover the working simulator; guide 07 lists optional rendering and simulation extensions).
 
 ## License
 
