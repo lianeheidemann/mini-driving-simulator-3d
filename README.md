@@ -72,7 +72,7 @@ browser doesn't report a `standard` mapping):
 Phone -> DroidJoy Server -> virtual XInput controller -> browser Gamepad API -> game
 ```
 
-<img src="media/joystick/DroidJoy-Lite-v4.png" alt="Custom DroidJoy Lite controller layout" width="45%">
+<img src="media/joystick/DroidJoy-Lite-v7.png" alt="Custom DroidJoy Lite controller layout" width="45%">
 
 Layout: **R** accelerates forward, **L** brakes/reverses, the center stick steers, **A** is the handbrake, **B** resets the car, and the bottom-left two-windows button switches the camera.
 
