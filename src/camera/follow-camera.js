@@ -31,12 +31,12 @@ AFRAME.registerComponent('follow-camera', {
         this.transitionElapsed = 0;
         this.transitioning = true;
       }
-      this.updateLabel();
+      this.announceMode();
     };
     this.onReset = () => {
       // Returning to the start always uses the chase camera, even from the top view.
       this.overhead = false;
-      this.updateLabel();
+      this.announceMode();
       this.snap = true;
       this.transitioning = false;
     };
@@ -44,11 +44,8 @@ AFRAME.registerComponent('follow-camera', {
     this.el.sceneEl.addEventListener('camera-toggle', this.onToggle);
   },
 
-  updateLabel() {
-    const label = document.querySelector('#camera-mode-label');
-    if (label) label.textContent = this.overhead
-      ? 'Câmera: vista de cima'
-      : 'Câmera: atrás do carro';
+  announceMode() {
+    this.el.sceneEl.emit('camera-mode-change', { overhead: this.overhead });
   },
 
   tick(time, delta) {

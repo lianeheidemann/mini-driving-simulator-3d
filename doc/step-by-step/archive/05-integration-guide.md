@@ -75,7 +75,7 @@ Do not continue until scale and orientation are correct.
 Create:
 
 ```text
-src/components/vehicle-controller.js
+src/vehicle/vehicle-controller.js
 ```
 
 Suggested state:
@@ -285,13 +285,16 @@ differences from the proposed structure above:
 - `keyboard.js` and `gamepad.js` became `keyboard-input.js` and
   `gamepad-input.js`, both under `src/controls/`, exactly as proposed —
   see [Phase 5](#phase-5--add-keyboard-controls-first)'s note above.
-- `src/components/` ended up with one file per A-Frame component rather
-  than the two originally proposed: `vehicle-controller.js` and
-  `follow-camera.js` as planned, plus `boundary-walls.js` (the walls and
-  gated entrance, grown out of `vehicle-controller.js`) and four
-  procedural-texture components (`exterior-landscape.js`, `stone-wall.js`,
-  `parking-surface.js`, `cloudy-sky.js`) that replaced an earlier combined
-  `scenery.js`.
+- `src/components/` was later split by responsibility, with one file per
+  A-Frame component: `src/vehicle/vehicle-controller.js` and
+  `src/camera/follow-camera.js` as planned, plus `src/scene/` for
+  `boundary-walls.js` (the walls and gated entrance, grown out of
+  `vehicle-controller.js`) and four procedural-texture components
+  (`exterior-landscape.js`, `stone-wall.js`, `parking-surface.js`,
+  `cloudy-sky.js`) that replaced an earlier combined `scenery.js`.
+- HUD DOM code moved out of the vehicle into `src/hud/hud.js`, the two
+  input readers are merged by `src/controls/input-manager.js`, and the
+  CSS moved out of `index.html` into `styles/hud.css`.
 
 ## Minimum viable project
 

@@ -85,11 +85,12 @@ Keyboard, Xbox-compatible gamepads, and DroidJoy continue to work with the contr
 
 ```text
 Keyboard events -> keyboard-input.js --+
-                                       +-> vehicle-controller.js -> vehicle movement
-Gamepad API ----> gamepad-input.js ----+
+                                       +-> input-manager.js -> vehicle-controller.js -> vehicle movement
+Gamepad API ----> gamepad-input.js ----+                                |
+                                                                        +-> hud.js -> HUD (speed, legend, fades)
 ```
 
-Both input readers return the same logical commands: `{ throttle, steering, handbrake, reset, camera }`. `throttle` and `steering` are numeric values (`throttle` > 0 accelerates, `steering` > 0 turns left and < 0 turns right); the other commands are booleans. The vehicle controller combines those commands, then applies acceleration, steering, braking, collisions, and reset. If keyboard and gamepad are used together, a nonzero keyboard value takes priority on each driving axis; either device can activate the handbrake, reset, or camera. The combination and physics are still in `vehicle-controller.js`, rather than in separate pipeline modules.
+Both input readers return the same logical commands: `{ throttle, steering, handbrake, reset, camera }`. `throttle` and `steering` are numeric values (`throttle` > 0 accelerates, `steering` > 0 turns left and < 0 turns right); the other commands are booleans. `input-manager.js` combines those commands (if keyboard and gamepad are used together, a nonzero keyboard value takes priority on each driving axis; either device can activate the handbrake, reset, or camera) and reports which device was used last. `vehicle-controller.js` then applies acceleration, steering, braking, collisions, and reset, and hands plain values to `hud.js`, the only module that touches the HUD's DOM.
 
 ## Getting started
 
@@ -123,20 +124,27 @@ mini-driving-simulator
 │   ├── interface/                 # Screenshots of the simulator HUD
 │   ├── joystick/                  # DroidJoy Lite controller-layout images
 │   └── social-preview.png         # Repository social preview image
+├── styles/
+│   └── hud.css                    # All HUD/overlay styling (panels, controls legend, speedometer, camera box, fade/flash)
 ├── src/
-│   ├── components/                # A-Frame components, one per file
-│   │   ├── vehicle-controller.js  # Driving physics, input combination, collisions/recoil, reset
-│   │   ├── boundary-walls.js      # Parking-lot walls and gated entrance, laid out from the ground size
-│   │   ├── follow-camera.js       # Chase and overhead camera modes, camera-mode label
-│   │   ├── exterior-landscape.js  # Procedural grass/road texture around the parking lot
-│   │   ├── stone-wall.js          # Procedural stone-block texture applied to the boundary walls
-│   │   ├── parking-surface.js     # Procedural parking-lot ground texture (bays, lanes, crosswalk)
-│   │   ├── cloudy-sky.js          # Procedural gradient sky with cloud clusters
+│   ├── controls/
+│   │   ├── keyboard-input.js      # Keyboard events -> logical driving input
+│   │   ├── gamepad-input.js       # Gamepad API (Xbox / DroidJoy) -> the same logical input, controller status
+│   │   └── input-manager.js       # Owns both readers, merges them (keyboard first), tracks the device used last
+│   ├── hud/
+│   │   ├── hud.js                 # Only module that touches HUD DOM: speed, legend mode, camera label, reset fade, collision flash
 │   │   └── fullscreen-button.js   # Fullscreen toggle; hides the HUD panels while fullscreen
-│   └── controls/
-│       ├── gamepad-input.js       # Gamepad API (Xbox / DroidJoy) -> logical driving input, controller status
-│       └── keyboard-input.js      # Keyboard events -> the same logical driving input
-├── index.html                     # Scene entry point, HUD (controls legend, speedometer, camera box), lighting/shadow setup
+│   ├── vehicle/
+│   │   └── vehicle-controller.js  # Driving physics, collisions/recoil, fade-to-start reset
+│   ├── camera/
+│   │   └── follow-camera.js       # Chase and overhead camera modes
+│   └── scene/                     # Static scenery, one A-Frame component per file
+│       ├── boundary-walls.js      # Parking-lot walls and gated entrance, laid out from the ground size
+│       ├── exterior-landscape.js  # Procedural grass/road texture around the parking lot
+│       ├── stone-wall.js          # Procedural stone-block texture applied to the boundary walls
+│       ├── parking-surface.js     # Procedural parking-lot ground texture (bays, lanes, crosswalk)
+│       └── cloudy-sky.js          # Procedural gradient sky with cloud clusters
+├── index.html                     # Scene entry point, HUD markup, lighting/shadow setup (no inline CSS)
 ├── LICENSE
 └── README.md
 ```

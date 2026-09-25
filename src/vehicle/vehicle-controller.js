@@ -1,4 +1,4 @@
-/* Arcade vehicle physics driven by normalized input. */
+/* Arcade vehicle physics driven by normalized input; HUD updates go through DrivingHud. */
 AFRAME.registerComponent('vehicle-controller', {
   schema: {
     ground: { type: 'selector' },
@@ -10,25 +10,20 @@ AFRAME.registerComponent('vehicle-controller', {
   },
 
   init() {
-    this.keyboardInput = new window.DrivingKeyboardInput();
-    this.gamepadInput = new window.DrivingGamepadInput(document.querySelector('#gamepad-status'));
+    this.hud = new window.DrivingHud(this.el.sceneEl);
+    this.input = new window.DrivingInput(this.hud.statusElement);
     this.speed = 0;
-    this.speedometer = document.querySelector('#speedometer');
-    this.speedValue = document.querySelector('#speed-value');
-    this.reverseIndicator = document.querySelector('#reverse-indicator');
     this.impactCooldown = 0;
     this.recoilTime = 0;
     this.impactVelocity = new AFRAME.THREE.Vector3();
     this.shakeTime = 0;
-    this.flash = document.querySelector('#collision-flash');
     this.startPosition = this.el.object3D.position.clone();
     this.startQuaternion = this.el.object3D.quaternion.clone();
     this.forward = new AFRAME.THREE.Vector3();
     this.returning = null;
-    this.resetFade = document.querySelector('#reset-fade');
     this.carBounds = new AFRAME.THREE.Box3();
     this.clearInput = () => {
-      this.keyboardInput.clear();
+      this.input.clear();
       this.speed = 0;
       this.recoilTime = 0;
       this.resetImpact();
@@ -43,17 +38,8 @@ AFRAME.registerComponent('vehicle-controller', {
 
   tick(time, delta) {
     if (!delta || document.hidden || !document.hasFocus()) return;
-    const keyboard = this.keyboardInput.read();
-    const gamepad = this.gamepadInput.read();
-    this.updateInputMode(keyboard, gamepad);
-    // Keyboard takes precedence on each analog axis; either source can trigger actions.
-    const input = {
-      throttle: keyboard.throttle || gamepad.throttle,
-      steering: keyboard.steering || gamepad.steering,
-      handbrake: keyboard.handbrake || gamepad.handbrake,
-      reset: keyboard.reset || gamepad.reset,
-      camera: keyboard.camera || gamepad.camera
-    };
+    const input = this.input.read();
+    this.hud.setInputMode(input.device);
     if (input.reset && !this.returning) this.resetVehicle();
     if (input.camera) this.el.emit('camera-toggle');
     if (!this.el.getObject3D('mesh')) return;
@@ -99,30 +85,11 @@ AFRAME.registerComponent('vehicle-controller', {
     this.updateSpeedometer();
   },
 
-  updateInputMode(keyboard, gamepad) {
-    // The HUD legend follows whichever device was used last; the keyboard wins a tie.
-    const mode = keyboard.active ? 'keyboard' : gamepad.active ? 'gamepad' : this.inputMode;
-    if (mode && mode !== this.inputMode) {
-      this.inputMode = mode;
-      document.body.dataset.inputMode = mode;
-    }
-  },
-
   updateSpeedometer() {
-    if (!this.speedValue) return;
-    if (this.speedometer) {
-      this.speedometer.setAttribute('aria-valuemax', Math.max(0, this.data.maxSpeed, this.data.reverseSpeed));
-    }
     // Scene units are treated as meters; m/s * 3.6 gives km/h.
     const speed = this.recoilTime > 0 ? this.impactVelocity.length() : Math.abs(this.speed);
-    const value = String(Math.round(speed * 3.6));
-    if (this.speedValue.textContent !== value) {
-      this.speedValue.textContent = value;
-      if (this.speedometer) this.speedometer.setAttribute('aria-valuenow', value);
-    }
-    if (this.reverseIndicator) {
-      this.reverseIndicator.classList.toggle('visible', this.recoilTime === 0 && this.speed < -0.05);
-    }
+    const reversing = this.recoilTime === 0 && this.speed < -0.05;
+    this.hud.setSpeed(speed * 3.6, reversing, Math.max(0, this.data.maxSpeed, this.data.reverseSpeed));
   },
 
   // Fades to black, moves the car back to its start while the screen is dark, then fades back in.
@@ -132,8 +99,8 @@ AFRAME.registerComponent('vehicle-controller', {
     this.impactCooldown = 0;
     this.recoilTime = 0;
     this.resetImpact();
-    if (this.flashAnimation) this.flashAnimation.cancel();
-    this.keyboardInput.clear();
+    this.hud.cancelFlash();
+    this.input.clear();
     this.updateSpeedometer();
   },
 
@@ -149,7 +116,7 @@ AFRAME.registerComponent('vehicle-controller', {
       this.updateSpeedometer();
     }
     const fade = progress < 0.5 ? progress * 2 : (1 - progress) * 2;
-    if (this.resetFade) this.resetFade.style.opacity = String(fade * fade * (3 - 2 * fade));
+    this.hud.setResetFade(fade * fade * (3 - 2 * fade));
     if (progress === 1) this.returning = null;
   },
 
@@ -205,13 +172,7 @@ AFRAME.registerComponent('vehicle-controller', {
         this.shakeTime = 0.4;
         this.shakeStrength = Math.min(0.07, Math.abs(impactSpeed) * 0.012);
         this.impactCooldown = 0.5;
-        if (this.flash) {
-          if (this.flashAnimation) this.flashAnimation.cancel();
-          this.flashAnimation = this.flash.animate(
-            [{ opacity: Math.min(1, 0.35 + Math.abs(impactSpeed) / 6) }, { opacity: 0 }],
-            { duration: 350, easing: 'ease-out' }
-          );
-        }
+        this.hud.flashCollision(Math.min(1, 0.35 + Math.abs(impactSpeed) / 6));
       } else {
         this.speed = 0;
         if (correctionX) this.impactVelocity.x = 0;
@@ -222,8 +183,8 @@ AFRAME.registerComponent('vehicle-controller', {
 
   remove() {
     this.resetImpact();
-    if (this.flashAnimation) this.flashAnimation.cancel();
-    this.keyboardInput.remove();
+    this.hud.remove();
+    this.input.remove();
     window.removeEventListener('blur', this.clearInput);
     document.removeEventListener('visibilitychange', this.onVisibilityChange);
   }

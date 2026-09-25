@@ -51,21 +51,23 @@ Controller / emulator (Xbox pad, DroidJoy)
 | Layer | Files |
 | --- | --- |
 | 3D assets | `input/car-v1.glb` (loaded by the scene); `input/car-v2.blend` / `car-v2-2.glb` (newer model in progress) |
-| Scene, lighting, HUD | `index.html` |
-| Vehicle physics, input combination, collisions, reset | `src/components/vehicle-controller.js` |
-| Chase and overhead cameras | `src/components/follow-camera.js` |
-| Walls and gated entrance | `src/components/boundary-walls.js` |
-| Procedural textures and sky | `src/components/parking-surface.js`, `stone-wall.js`, `exterior-landscape.js`, `cloudy-sky.js` |
-| Fullscreen toggle | `src/components/fullscreen-button.js` |
-| Input readers | `src/controls/keyboard-input.js`, `src/controls/gamepad-input.js` |
+| Scene, lighting, HUD markup | `index.html` |
+| HUD styling (panels, legend, overlays) | `styles/hud.css` |
+| HUD updates (speed, legend mode, camera label, fades, flash) | `src/hud/hud.js` |
+| Vehicle physics, collisions, reset flow | `src/vehicle/vehicle-controller.js` |
+| Chase and overhead cameras | `src/camera/follow-camera.js` |
+| Walls and gated entrance | `src/scene/boundary-walls.js` |
+| Procedural textures and sky | `src/scene/parking-surface.js`, `stone-wall.js`, `exterior-landscape.js`, `cloudy-sky.js` |
+| Fullscreen toggle | `src/hud/fullscreen-button.js` |
+| Input readers and their combination | `src/controls/keyboard-input.js`, `src/controls/gamepad-input.js`, `src/controls/input-manager.js` |
 
 Both input readers return the same logical commands —
 `{ throttle, steering, handbrake, reset, camera }` — which
-`vehicle-controller.js` combines before applying movement:
+`input-manager.js` combines before `vehicle-controller.js` applies movement:
 
 ```text
 Keyboard events -> keyboard-input.js --+
-                                       +-> vehicle-controller.js -> vehicle movement
+                                       +-> input-manager.js -> vehicle-controller.js -> vehicle movement
 Gamepad API ----> gamepad-input.js ----+
 ```
 

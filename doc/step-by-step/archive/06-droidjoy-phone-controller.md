@@ -7,12 +7,12 @@ This phase connects the **Android phone as the controller** to the simulator **r
 ```text
 Phone touch controls → DroidJoy app → local Wi-Fi/Bluetooth → DroidJoy Server on Windows
                     → virtual Xbox 360 / XInput controller → PC browser Gamepad API
-                    → src/controls/gamepad-input.js → vehicle-controller.js → car
+                    → src/controls/gamepad-input.js → input-manager.js → vehicle-controller.js → car
 ```
 
 ## 1. Check what the game already supports
 
-The current [gamepad input module](../../../src/controls/gamepad-input.js) calls `navigator.getGamepads()` and prefers a connected controller whose browser `mapping` is `standard`. If DroidJoy is exposed as a non-standard controller, the game automatically falls back to its numbered layout. The [vehicle controller](../../../src/components/vehicle-controller.js) applies its steering and throttle.
+The current [gamepad input module](../../../src/controls/gamepad-input.js) calls `navigator.getGamepads()` and prefers a connected controller whose browser `mapping` is `standard`. If DroidJoy is exposed as a non-standard controller, the game automatically falls back to its numbered layout. The [vehicle controller](../../../src/vehicle/vehicle-controller.js) applies its steering and throttle.
 
 | Game action | Phone control in Xbox-style layout | Standard Gamepad API input |
 | --- | --- | --- |
