@@ -90,7 +90,7 @@ window.DrivingGamepadInput = class {
     input.camera = camera && !this.previousCamera;
     this.previousCamera = camera;
     const profile = isStandard ? 'Xbox padrão' : 'DroidJoy numerado';
-    this.setStatus(`Controle conectado (${profile}): ${pad.id} | RT/RB: acelerar · LT/LB: ré/freio · A: freio de mão · B: reiniciar · 8: câmera`);
+    this.setStatus(`Controle conectado (${profile}): ${pad.id} | R: acelerar · L: ré/freio · A: freio de mão · B: reiniciar · botão de duas janelas: câmera`);
     return input;
   }
 
