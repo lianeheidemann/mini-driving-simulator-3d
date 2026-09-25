@@ -80,7 +80,8 @@ AFRAME.registerComponent('vehicle-controller', {
     }
     const car = this.el.object3D;
     // This model faces local +Z; rotation="0 90 0" turns it toward +X.
-    car.rotation.y -= steering * Math.min(Math.abs(this.speed) / 3, 1)
+    // steering > 0 means left, and +rotation.y is counter-clockwise (left) from above.
+    car.rotation.y += steering * Math.min(Math.abs(this.speed) / 3, 1)
       * Math.sign(this.speed) * 1.5 * dt;
     this.forward.set(0, 0, 1).applyQuaternion(car.quaternion);
     car.position.addScaledVector(this.forward, this.speed * dt);
