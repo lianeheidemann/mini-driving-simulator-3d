@@ -104,10 +104,7 @@ http://localhost:8000
 ## Project structure
 
 ```text
-mini-driving-simulator-3d/
-├── .github/
-│   ├── ISSUE_TEMPLATE/            # Bug report and feature request forms
-│   └── workflows/                 # HTML validation and GitHub Pages deploy
+mini-driving-simulator
 ├── doc/
 │   └── step-by-step/              # Learning-oriented guides for the stack
 │       ├── README.md              # Guide index, learning path, and layer-to-file map
