@@ -20,8 +20,8 @@
   letter-spacing: 1.6px;
 }
 #controls-panel::before, #speedometer::before {
-  margin-bottom: 12px;
-  padding-bottom: 6px;
+  margin-bottom: 8px;
+  padding-bottom: 4px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   text-align: left;
 }
@@ -29,15 +29,15 @@
   top: 20px; left: 20px;
   width: max-content;
   max-width: min(680px, calc(100vw - 184px));
-  padding: 14px 18px;
+  padding: 10px 14px;
 }
 #controls-panel::before { content: "CONTROLES"; }
 #gamepad-status::before {
   content: "";
   display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-right: 8px;
+  width: 7px;
+  height: 7px;
+  margin-right: 7px;
   border-radius: 50%;
   background: #5b6871;
   opacity: 0.6;
@@ -56,8 +56,8 @@
 .legend-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 0 18px;
+  gap: 4px;
+  padding: 0 14px;
   border-left: 1px solid rgba(255, 255, 255, 0.2);
 }
 .legend-group:first-child { padding-left: 0; border-left: 0; }
@@ -65,8 +65,9 @@
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  min-height: 34px;
+  gap: 8px;
+  min-height: 26px;
+  font-size: 12px;
   white-space: nowrap;
 }
 .legend-icon {
@@ -74,32 +75,32 @@
   align-items: center;
   justify-content: center;
   flex: none;
-  width: 54px;
-  height: 34px;
+  width: 44px;
+  height: 26px;
 }
 .legend-icon svg { width: 100%; height: 100%; }
 .round-icon {
-  width: 34px;
-  margin: 0 10px;
+  width: 26px;
+  margin: 0 9px;
   box-sizing: border-box;
-  padding: 7px;
+  padding: 5px;
   border: 1.5px solid rgba(237, 243, 246, 0.75);
   border-radius: 50%;
 }
 .keycap {
   box-sizing: border-box;
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   border: 1.5px solid rgba(237, 243, 246, 0.75);
-  border-radius: 8px;
-  font-size: 16px;
+  border-radius: 6px;
+  font-size: 13px;
   font-weight: 700;
-  line-height: 27px;
+  line-height: 21px;
   text-align: center;
 }
-.keycap.wide { width: auto; padding: 0 10px; font-size: 13px; }
+.keycap.wide { width: auto; padding: 0 8px; font-size: 11px; }
 .keys { display: flex; gap: 4px; }
-.keys-wide .keys { min-width: 64px; }
+.keys-wide .keys { min-width: 52px; }
 #legend-keyboard { display: flex; }
 #legend-gamepad { display: none; }
 body[data-input-mode="gamepad"] #legend-keyboard { display: none; }
@@ -109,14 +110,14 @@ body[data-input-mode="gamepad"] #legend-gamepad { display: flex; }
 #gamepad-status {
   width: 0;
   min-width: 100%;
-  margin-top: 10px;
+  margin-top: 6px;
   color: #afbec7;
-  font-size: 11px;
+  font-size: 10px;
   line-height: 1.4;
   overflow-wrap: anywhere;
   white-space: pre-line;
-  padding-left: 16px;
-  text-indent: -16px;
+  padding-left: 14px;
+  text-indent: -14px;
 }
 #speedometer {
   top: 20px; right: 20px;

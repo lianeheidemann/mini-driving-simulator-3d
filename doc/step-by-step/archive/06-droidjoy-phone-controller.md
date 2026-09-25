@@ -29,7 +29,7 @@ The game subtracts braking from acceleration. RT/LT preserve analog pressure; RB
 
 A full Xbox layout wastes touch space and makes it too easy to lose the controls under the thumbs. Keep the Xbox/XInput logic, but leave only the controls the simulator uses:
 
-<img src="../../../media/joystick/DroidJoy-Lite-v4.png" alt="Custom DroidJoy Lite controller layout" width="50%">
+<img src="../../../media/joystick/DroidJoy-Lite-v7.png" alt="Custom DroidJoy Lite controller layout" width="50%">
 
 ```text
 ┌────────────────────────────────────────────────────────────┐

@@ -25,10 +25,10 @@ The car's initial 3D model was generated with [Tripo3D](https://www.tripo3d.ai/)
 - Arcade vehicle physics: acceleration, braking, reverse, drag, and speed-sensitive steering.
 - Collision handling against the parking-lot boundary walls, with impact recoil and camera shake.
 - Two camera modes: chase camera and top-down overhead view, with smooth transitions.
-- HUD with connected-controller status, live speedometer (km/h) with an `R` indicator while reversing, and camera mode indicator.
+- HUD with a controls legend that switches between keyboard and gamepad/DroidJoy, a connected-controller indicator, a live speedometer (km/h) with an `R` indicator while reversing, and a camera mode indicator.
 - Fullscreen button (browser Fullscreen API) that hides the non-essential HUD panels for a cleaner view; A-Frame's VR/XR button is disabled to avoid the stereo split view.
 - Procedurally laid out scenery: stone boundary walls, gated entrance, parking markings, and surrounding landscape.
-- Vehicle reset to the starting position/orientation at any time.
+- Vehicle reset to the starting position/orientation at any time, with a fade-out/fade-in and the chase camera restored.
 
 ## Tech stack
 
@@ -43,13 +43,13 @@ The car's initial 3D model was generated with [Tripo3D](https://www.tripo3d.ai/)
 
 ## Controls
 
-| Action | Keyboard | Gamepad |
+| Action | Keyboard | Gamepad / DroidJoy |
 | --- | --- | --- |
-| Steer | A/D or ←/→ | analog stick |
-| Accelerate | W or ↑ | R |
-| Brake / reverse | S or ↓ | L |
+| Steer left / right | A / D or ←/→ | Analog stick |
+| Accelerate | W or ↑ | R (Xbox: RB or RT) |
+| Brake / reverse | S or ↓ | L (Xbox: LB or LT) |
 | Handbrake | Space | A |
-| Reset vehicle position | R | B |
+| Reset to the start (fades out and back in) | R | B |
 | Toggle camera | Y | Two-windows button |
 | Toggle fullscreen | On-screen ⤢ button | — |
 
@@ -109,7 +109,7 @@ http://localhost:8000
 ## Project structure
 
 ```text
-mini-driving-simulator
+mini-driving-simulator-3d
 ├── .github/
 │   ├── workflows/
 │   │   ├── deploy-pages.yml       # Publishes the site to GitHub Pages on every push to main
@@ -144,7 +144,6 @@ mini-driving-simulator
 │       ├── stone-wall.js          # Procedural stone-block texture applied to the boundary walls
 │       ├── parking-surface.js     # Procedural parking-lot ground texture (bays, lanes, crosswalk)
 │       └── cloudy-sky.js          # Procedural gradient sky with cloud clusters
-│
 ├── index.html                     # Scene entry point, HUD markup, lighting/shadow setup (no inline CSS)
 ├── LICENSE
 └── README.md
