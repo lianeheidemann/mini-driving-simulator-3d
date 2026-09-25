@@ -144,6 +144,7 @@ mini-driving-simulator
 │       ├── stone-wall.js          # Procedural stone-block texture applied to the boundary walls
 │       ├── parking-surface.js     # Procedural parking-lot ground texture (bays, lanes, crosswalk)
 │       └── cloudy-sky.js          # Procedural gradient sky with cloud clusters
+│
 ├── index.html                     # Scene entry point, HUD markup, lighting/shadow setup (no inline CSS)
 ├── LICENSE
 └── README.md
