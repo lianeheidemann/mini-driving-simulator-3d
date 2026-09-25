@@ -50,7 +50,7 @@ The car's initial 3D model was generated with [Tripo3D](https://www.tripo3d.ai/)
 | Brake / reverse | S or ↓ | LT (analog) or LB (digital) |
 | Handbrake | Space | A |
 | Reset vehicle | R | B |
-| Toggle camera | Y | Y or DroidJoy screen button (`8`) |
+| Toggle camera | Y | Y or DroidJoy screen button |
 | Toggle fullscreen | On-screen ⤢ button (bottom-right) | — |
 
 The gamepad is read through the standard [`navigator.getGamepads()`](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/getGamepads) mapping; connect a controller and press any button to activate it.
