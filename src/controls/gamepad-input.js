@@ -3,7 +3,7 @@ window.DrivingGamepadInput = class {
     this.status = status;
     this.previousReset = false;
     this.previousCamera = false;
-    this.disconnectedMessage = 'Conecte o controle e pressione um botão. Teclado disponível. Dica: instale o DroidJoy no PC e no celular para usar o celular como controle nesta página.';
+    this.disconnectedMessage = 'Controle não conectado\nUse o teclado ou configure o DroidJoy no PC e celular.';
     // The game loop skips frames while the tab is unfocused, so connection
     // changes also update the indicator directly instead of waiting for read().
     const refresh = () => this.refreshStatus();
