@@ -45,13 +45,13 @@ The car's initial 3D model was generated with [Tripo3D](https://www.tripo3d.ai/)
 
 | Action | Keyboard | Gamepad |
 | --- | --- | --- |
-| Steer | A/D or ←/→ | Either stick or D-pad |
-| Accelerate | W or ↑ | RT (analog) or RB (digital) |
-| Brake / reverse | S or ↓ | LT (analog) or LB (digital) |
+| Steer | A/D or ←/→ | analog stick |
+| Accelerate | W or ↑ | R |
+| Brake / reverse | S or ↓ | L |
 | Handbrake | Space | A |
-| Reset vehicle (screen fades out and back in as the car returns to the start) | R | B |
-| Toggle camera | Y | Y or the two-windows button, bottom-left (DroidJoy screen button `8`) |
-| Toggle fullscreen | On-screen ⤢ button (bottom-right) | — |
+| Reset vehicle position | R | B |
+| Toggle camera | Y | Two-windows button |
+| Toggle fullscreen | On-screen ⤢ button | — |
 
 The **Controles** box in the HUD shows the keyboard legend or the gamepad/DroidJoy legend, switching to whichever device you used last.
 
