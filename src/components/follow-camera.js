@@ -31,17 +31,24 @@ AFRAME.registerComponent('follow-camera', {
         this.transitionElapsed = 0;
         this.transitioning = true;
       }
-      const label = document.querySelector('#camera-mode');
-      if (label) label.textContent = this.overhead
-        ? 'Câmera: vista de cima · Y para trocar'
-        : 'Câmera: atrás do carro · Y para trocar';
+      this.updateLabel();
     };
     this.onReset = () => {
+      // Returning to the start always uses the chase camera, even from the top view.
+      this.overhead = false;
+      this.updateLabel();
       this.snap = true;
       this.transitioning = false;
     };
     this.el.sceneEl.addEventListener('vehicle-reset', this.onReset);
     this.el.sceneEl.addEventListener('camera-toggle', this.onToggle);
+  },
+
+  updateLabel() {
+    const label = document.querySelector('#camera-mode-label');
+    if (label) label.textContent = this.overhead
+      ? 'Câmera: vista de cima'
+      : 'Câmera: atrás do carro';
   },
 
   tick(time, delta) {

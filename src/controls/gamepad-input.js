@@ -3,6 +3,12 @@ window.DrivingGamepadInput = class {
     this.status = status;
     this.previousReset = false;
     this.previousCamera = false;
+    this.disconnectedMessage = 'Conecte o controle e pressione um botão. Teclado disponível. Dica: instale o DroidJoy no PC e no celular para usar o celular como controle nesta página.';
+    // The game loop skips frames while the tab is unfocused, so connection
+    // changes also update the indicator directly instead of waiting for read().
+    const refresh = () => this.refreshStatus();
+    window.addEventListener('gamepadconnected', refresh);
+    window.addEventListener('gamepaddisconnected', refresh);
     this.mappings = {
       // Standard Gamepad API indices used by Xbox-compatible controllers.
       standard: {
@@ -36,7 +42,7 @@ window.DrivingGamepadInput = class {
   }
 
   read() {
-    const input = { throttle: 0, steering: 0, handbrake: false, reset: false, camera: false };
+    const input = { throttle: 0, steering: 0, handbrake: false, reset: false, camera: false, active: false };
     let pads;
     try {
       pads = navigator.getGamepads ? Array.from(navigator.getGamepads()) : [];
@@ -51,7 +57,7 @@ window.DrivingGamepadInput = class {
     if (!pad) {
       this.previousReset = false;
       this.previousCamera = false;
-      this.setStatus('Conecte o controle e pressione um botão. Teclado disponível.');
+      this.setStatus(this.disconnectedMessage);
       return input;
     }
     const isStandard = pad.mapping === 'standard';
@@ -89,12 +95,25 @@ window.DrivingGamepadInput = class {
     const camera = pressed('camera') || pressed('cameraScreen');
     input.camera = camera && !this.previousCamera;
     this.previousCamera = camera;
-    const profile = isStandard ? 'Xbox padrão' : 'DroidJoy numerado';
-    this.setStatus(`Controle conectado (${profile}): ${pad.id} | R: acelerar · L: ré/freio · A: freio de mão · B: reiniciar · botão de duas janelas: câmera`);
+    // Any button or stick movement counts, so the HUD follows the device in use even for unmapped buttons.
+    input.active = pad.buttons.some((b) => b.pressed) || pad.axes.some((v) => Math.abs(v) > 0.25);
+    this.setStatus('Controle conectado', true);
     return input;
   }
 
-  setStatus(message) {
-    if (this.status && this.status.textContent !== message) this.status.textContent = message;
+  refreshStatus() {
+    let connected = false;
+    try {
+      connected = Array.from(navigator.getGamepads()).some((p) => p && p.connected);
+    } catch (error) {
+      return;
+    }
+    this.setStatus(connected ? 'Controle conectado' : this.disconnectedMessage, connected);
+  }
+
+  setStatus(message, connected = false) {
+    if (!this.status) return;
+    if (this.status.textContent !== message) this.status.textContent = message;
+    this.status.classList.toggle('connected', connected);
   }
 };

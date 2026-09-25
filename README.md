@@ -49,13 +49,15 @@ The car's initial 3D model was generated with [Tripo3D](https://www.tripo3d.ai/)
 | Accelerate | W or ↑ | RT (analog) or RB (digital) |
 | Brake / reverse | S or ↓ | LT (analog) or LB (digital) |
 | Handbrake | Space | A |
-| Reset vehicle | R | B |
-| Toggle camera | Y | Y or the two-windows button (DroidJoy screen button `8`) |
+| Reset vehicle (screen fades out and back in as the car returns to the start) | R | B |
+| Toggle camera | Y | Y or the two-windows button, bottom-left (DroidJoy screen button `8`) |
 | Toggle fullscreen | On-screen ⤢ button (bottom-right) | — |
+
+The **Controles** box in the HUD shows the keyboard legend or the gamepad/DroidJoy legend, switching to whichever device you used last.
 
 The gamepad is read through the standard [`navigator.getGamepads()`](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/getGamepads) mapping; connect a controller and press any button to activate it.
 
-For touch controllers, **RB also accelerates, LB also brakes/reverses, and the D-pad can steer**. These digital alternatives reproduce the immediate response of the keyboard while RT/LT and either virtual stick remain available for analog control. Moving the stick left replaces holding `A`; moving it right replaces holding `D`, including while accelerating.
+For touch controllers, **RB (labeled `R` in DroidJoy) also accelerates, LB (`L`) also brakes/reverses, and the D-pad can steer**. These digital alternatives reproduce the immediate response of the keyboard while RT/LT and either virtual stick remain available for analog control. Moving the stick left replaces holding `A`; moving it right replaces holding `D`, including while accelerating.
 
 ### DroidJoy Xbox emulation
 
@@ -71,6 +73,8 @@ Phone -> DroidJoy Server -> virtual XInput controller -> browser Gamepad API -> 
 ```
 
 <img src="media/joystick/DroidJoy-Lite-v4.png" alt="Custom DroidJoy Lite controller layout" width="45%">
+
+Layout: **R** accelerates forward, **L** brakes/reverses, the center stick steers, **A** is the handbrake, **B** resets the car, and the bottom-left two-windows button switches the camera.
 
 Full setup, button-mapping tables, and a recommended touch layout are in the
 [DroidJoy phone-controller guide](doc/step-by-step/archive/06-droidjoy-phone-controller.md).
@@ -105,26 +109,34 @@ http://localhost:8000
 
 ```text
 mini-driving-simulator
+├── .github/
+│   ├── workflows/
+│   │   ├── deploy-pages.yml       # Publishes the site to GitHub Pages on every push to main
+│   │   └── html-validate.yml      # HTML validation check
+│   └── ISSUE_TEMPLATE/            # Bug report and feature request forms
 ├── doc/
 │   └── step-by-step/              # Learning-oriented guides for the stack
 │       ├── README.md              # Guide index, learning path, and layer-to-file map
 │       └── archive/               # The guides themselves, numbered 01-07
-├── input/                         # Source 3D assets (.glb / .blend)
-├── media/                         # Screenshots and controller-layout images used in the docs
+├── input/                         # Source 3D assets (car .glb models and the .blend source)
+├── media/
+│   ├── interface/                 # Screenshots of the simulator HUD
+│   ├── joystick/                  # DroidJoy Lite controller-layout images
+│   └── social-preview.png         # Repository social preview image
 ├── src/
 │   ├── components/                # A-Frame components, one per file
 │   │   ├── vehicle-controller.js  # Driving physics, input combination, collisions/recoil, reset
 │   │   ├── boundary-walls.js      # Parking-lot walls and gated entrance, laid out from the ground size
-│   │   ├── follow-camera.js       # Chase and overhead camera modes
+│   │   ├── follow-camera.js       # Chase and overhead camera modes, camera-mode label
 │   │   ├── exterior-landscape.js  # Procedural grass/road texture around the parking lot
 │   │   ├── stone-wall.js          # Procedural stone-block texture applied to the boundary walls
 │   │   ├── parking-surface.js     # Procedural parking-lot ground texture (bays, lanes, crosswalk)
 │   │   ├── cloudy-sky.js          # Procedural gradient sky with cloud clusters
-│   │   └── fullscreen-button.js   # Fullscreen toggle and fullscreen HUD state
+│   │   └── fullscreen-button.js   # Fullscreen toggle; hides the HUD panels while fullscreen
 │   └── controls/
-│       ├── gamepad-input.js       # Gamepad API -> logical driving input
+│       ├── gamepad-input.js       # Gamepad API (Xbox / DroidJoy) -> logical driving input, controller status
 │       └── keyboard-input.js      # Keyboard events -> the same logical driving input
-├── index.html                     # Scene entry point, HUD, lighting/shadow setup
+├── index.html                     # Scene entry point, HUD (controls legend, speedometer, camera box), lighting/shadow setup
 ├── LICENSE
 └── README.md
 ```

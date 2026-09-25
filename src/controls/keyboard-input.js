@@ -28,7 +28,8 @@ window.DrivingKeyboardInput = class {
       steering: Number(pressed('KeyA', 'ArrowLeft')) - Number(pressed('KeyD', 'ArrowRight')),
       handbrake: pressed('Space'),
       reset: this.pendingReset,
-      camera: this.pendingCamera
+      camera: this.pendingCamera,
+      active: this.keys.size > 0 || this.pendingReset || this.pendingCamera
     };
     this.pendingReset = false;
     this.pendingCamera = false;

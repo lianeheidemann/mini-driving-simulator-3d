@@ -4,7 +4,9 @@ AFRAME.registerComponent('vehicle-controller', {
     ground: { type: 'selector' },
     // Configurable limits in km/h; movement uses meters per second.
     maxSpeed: { default: 60 },
-    reverseSpeed: { default: 15 }
+    reverseSpeed: { default: 15 },
+    // Total seconds of the fade-out/fade-in that returns the car to the start.
+    resetDuration: { default: 0.7 }
   },
 
   init() {
@@ -22,6 +24,8 @@ AFRAME.registerComponent('vehicle-controller', {
     this.startPosition = this.el.object3D.position.clone();
     this.startQuaternion = this.el.object3D.quaternion.clone();
     this.forward = new AFRAME.THREE.Vector3();
+    this.returning = null;
+    this.resetFade = document.querySelector('#reset-fade');
     this.carBounds = new AFRAME.THREE.Box3();
     this.clearInput = () => {
       this.keyboardInput.clear();
@@ -41,6 +45,7 @@ AFRAME.registerComponent('vehicle-controller', {
     if (!delta || document.hidden || !document.hasFocus()) return;
     const keyboard = this.keyboardInput.read();
     const gamepad = this.gamepadInput.read();
+    this.updateInputMode(keyboard, gamepad);
     // Keyboard takes precedence on each analog axis; either source can trigger actions.
     const input = {
       throttle: keyboard.throttle || gamepad.throttle,
@@ -49,7 +54,7 @@ AFRAME.registerComponent('vehicle-controller', {
       reset: keyboard.reset || gamepad.reset,
       camera: keyboard.camera || gamepad.camera
     };
-    if (input.reset) this.resetVehicle();
+    if (input.reset && !this.returning) this.resetVehicle();
     if (input.camera) this.el.emit('camera-toggle');
     if (!this.el.getObject3D('mesh')) return;
     const dt = Math.min(delta / 1000, 0.05);
@@ -60,6 +65,10 @@ AFRAME.registerComponent('vehicle-controller', {
     }
     mesh.rotation.copy(this.meshRotation);
     this.impactCooldown = Math.max(0, this.impactCooldown - dt);
+    if (this.returning) {
+      this.updateReturn(dt);
+      return;
+    }
     if (this.recoilTime > 0) {
       this.el.object3D.position.addScaledVector(this.impactVelocity, dt);
       this.impactVelocity.multiplyScalar(Math.exp(-6 * dt));
@@ -90,6 +99,15 @@ AFRAME.registerComponent('vehicle-controller', {
     this.updateSpeedometer();
   },
 
+  updateInputMode(keyboard, gamepad) {
+    // The HUD legend follows whichever device was used last; the keyboard wins a tie.
+    const mode = keyboard.active ? 'keyboard' : gamepad.active ? 'gamepad' : this.inputMode;
+    if (mode && mode !== this.inputMode) {
+      this.inputMode = mode;
+      document.body.dataset.inputMode = mode;
+    }
+  },
+
   updateSpeedometer() {
     if (!this.speedValue) return;
     if (this.speedometer) {
@@ -107,17 +125,32 @@ AFRAME.registerComponent('vehicle-controller', {
     }
   },
 
+  // Fades to black, moves the car back to its start while the screen is dark, then fades back in.
   resetVehicle() {
-    this.el.object3D.position.copy(this.startPosition);
-    this.el.object3D.quaternion.copy(this.startQuaternion);
+    this.returning = { elapsed: 0, moved: false };
     this.speed = 0;
     this.impactCooldown = 0;
     this.recoilTime = 0;
     this.resetImpact();
-    this.el.emit('vehicle-reset');
     if (this.flashAnimation) this.flashAnimation.cancel();
     this.keyboardInput.clear();
     this.updateSpeedometer();
+  },
+
+  updateReturn(dt) {
+    const state = this.returning;
+    state.elapsed += dt;
+    const progress = Math.min(1, state.elapsed / Math.max(0.01, this.data.resetDuration));
+    if (progress >= 0.5 && !state.moved) {
+      state.moved = true;
+      this.el.object3D.position.copy(this.startPosition);
+      this.el.object3D.quaternion.copy(this.startQuaternion);
+      this.el.emit('vehicle-reset');
+      this.updateSpeedometer();
+    }
+    const fade = progress < 0.5 ? progress * 2 : (1 - progress) * 2;
+    if (this.resetFade) this.resetFade.style.opacity = String(fade * fade * (3 - 2 * fade));
+    if (progress === 1) this.returning = null;
   },
 
   resetImpact() {
