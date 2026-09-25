@@ -50,7 +50,7 @@ The car's initial 3D model was generated with [Tripo3D](https://www.tripo3d.ai/)
 | Brake / reverse | S or ↓ | L (Xbox: LB or LT) |
 | Handbrake | Space | A |
 | Reset to the start (fades out and back in) | R | B |
-| Toggle camera | Y | Two-windows button |
+| Toggle camera | Y | Two-windows button or Y |
 | Toggle fullscreen | On-screen ⤢ button | — |
 
 The **Controles** box in the HUD shows the keyboard legend or the gamepad/DroidJoy legend, switching to whichever device you used last.
