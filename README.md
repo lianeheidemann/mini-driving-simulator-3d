@@ -11,7 +11,7 @@
 
 A browser-based 3D driving simulator built with **[Blender](https://www.blender.org/)**, **[A-Frame](https://aframe.io/)**, and **[Three.js](https://threejs.org/)**, drivable with the keyboard or an Xbox-compatible gamepad.
 
-![Gameplay demo](media/interface/interface-v2.webp)
+![Gameplay demo](media/interface/interface-v3.webp)
 
 **👾 Try it live: https://lianeheidemann.github.io/mini-driving-simulator-3d/**
 
